@@ -1,0 +1,164 @@
+{
+"parallel": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "end"],
+    "resources": ["r1", "r2"],
+    "resource_pools": {
+        "r1": {"a": 1.8, "b": 1.6},
+        "r2": {"a": 1.8, "b": 1.6}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a,b": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"end": 1}
+        },
+        "b": {
+            "inputs": ["start"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["a,b"],
+            "outputs": {}
+        }
+    }
+},
+"low_utilization": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "end"],
+    "resources": ["r1", "r2"],
+    "resource_pools": {
+        "r1": {"a": 1.6, "b": 1.4},
+        "r2": {"a": 1.4, "b": 1.6}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"b": 1}
+        },
+        "b": {
+            "inputs": ["a"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["b"],
+            "outputs": {}
+        }
+    }
+},
+"high_utilization": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "end"],
+    "resources": ["r1", "r2"],
+    "resource_pools": {
+        "r1": {"a": 2.0, "b": 1.8},
+        "r2": {"a": 1.8, "b": 2.0}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"b": 1}
+        },
+        "b": {
+            "inputs": ["a"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["b"],
+            "outputs": {}
+        }
+    }
+},
+"slow_server": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "end"],
+    "resources": ["r1", "r2"],
+    "resource_pools": {
+        "r1": {"a": 1.4, "b": 1.6},
+        "r2": {"a": 1.8, "b": 3.0}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"b": 1}
+        },
+        "b": {
+            "inputs": ["a"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["b"],
+            "outputs": {}
+        }
+    }
+},
+"down_stream": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "end"],
+    "resources": ["r1", "r2"],
+    "resource_pools": {
+        "r1": {"a": 1.6, "b": 1.8},
+        "r2": {"a": 1.6, "b": 1.8}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"b": 1}
+        },
+        "b": {
+            "inputs": ["a"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["b"],
+            "outputs": {}
+        }
+    }
+},
+"n_system": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "end"],
+    "resources": ["r1", "r2"],
+    "resource_pools": {
+        "r1": {"b": 3.0},
+        "r2": {"a": 2.4, "b": 2.0}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 0.5, "b": 0.5}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"end": 1}
+        },
+        "b": {
+            "inputs": ["start"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["a", "b"],
+            "outputs": {}
+        }
+    }
+}
+}
