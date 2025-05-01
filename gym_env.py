@@ -1,7 +1,6 @@
 from gymnasium import spaces, Env
 import numpy as np
 from heuristics import random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy
-
 class Environment(Env):
     def __init__(self, simulator) -> None:
         super().__init__()
@@ -16,7 +15,7 @@ class Environment(Env):
         self.episode_count = 0
         self.stats_history = []
         
-        self.action_space = spaces.Discrete(len(self.actions))  # +1 for postpone
+        self.action_space = spaces.Discrete(len(self.actions)) # +1 for postpone
 
         self.observation_space = spaces.Box(
             low=0, high=1, shape=(len(self.simulator.resources) + 
