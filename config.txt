@@ -160,5 +160,50 @@
             "outputs": {}
         }
     }
+},
+"parallel_xor": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "c", "d", "e", "f", "end"],
+    "resources": ["r1", "r2", "r3", "r4"],
+    "resource_pools": {
+        "r1": {"a": 1.6, "b": 1.4, "c": 1.4},
+        "r2": {"d": 1.6, "e": 2.4, "f": 1.6},
+        "r3": {"a": 1.2, "c": 1.6, "e": 1.2},
+        "r4": {"b": 1.6, "d": 1.4, "f": 1.4}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"b": 1}
+        },
+        "b": {
+            "inputs": ["a"],
+            "outputs": {"c,e": 0.5, "d,e": 0.5}
+        },
+        "c": {
+            "inputs": ["b"],
+            "outputs": {"f": 1}
+        },
+        "d": {
+            "inputs": ["b"],
+            "outputs": {"f": 1}
+        },
+        "e": {
+            "inputs": ["b"],
+            "outputs": {"f": 1}
+        },
+        "f": {
+            "inputs": ["c,e", "d,e"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["f"],
+            "outputs": {}
+        }
+    }
 }
 }
