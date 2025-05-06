@@ -97,30 +97,6 @@ class PPOEvalCallback(BaseCallback):
         
         return True
 
-def custom_schedule(initial_value: float) -> Callable[[float], float]:
-    """
-    Linear learning rate schedule.
-
-    :param initial_value: Initial learning rate.
-    :return: schedule that computes
-      current learning rate depending on remaining progress
-    """
-    def func(progress_remaining: float) -> float:
-        """
-        Progress will decrease from 1 (beginning) to 0.
-
-        :param progress_remaining:
-        :return: current learning rate
-        """
-        if progress_remaining > 0.8: #0.95
-            return initial_value
-        elif progress_remaining > 0.5: #0.9
-            return initial_value * 0.5
-        else:
-            return initial_value * 0.1
-
-    return func
-
 def linear_schedule(initial_value: float) -> Callable[[float], float]:
     def func(progress_remaining: float) -> float:
         return progress_remaining * initial_value

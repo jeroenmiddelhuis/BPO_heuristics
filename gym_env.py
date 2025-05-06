@@ -37,7 +37,7 @@ class Environment(Env):
                 'avg_cycle_time': avg_cycle_time
             })
             
-        print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
+        #print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
         
         self.simulator.reset()
         # Reset action tracking but keep the episode count and stats history

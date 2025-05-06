@@ -56,7 +56,8 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
         done = False
 
         while not done:
-            action, _ = model.predict(obs, action_masks=env.action_masks())
+            action, probabilities = model.predict(obs, action_masks=env.action_masks(), deterministic=False)
+            #print(f"Action probabilities: {probabilities}", f"Action: {action}")
             obs, reward, done, _, _ = env.step(np.int32(action))
 
         assert len(simulator.completed_cases) == nr_cases, f"Expected {nr_cases} completed cases, but got {len(simulator.completed_cases)}"
@@ -74,7 +75,8 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
 
 
 if __name__ == "__main__":
-    for config_type in ['parallel_xor', 'parallel', 'low_utilization', 'high_utilization', 'slow_server', 'down_stream', 'n_system']:
+    # ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
+    for config_type in ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
         # Evaluate PPO policy
         evaluate_ppo(config_type, nr_cases=1000, nr_episodes=300)
         

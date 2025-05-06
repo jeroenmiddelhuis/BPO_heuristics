@@ -196,12 +196,11 @@ class Simulator:
                 
             self.events.sort()
         
-        print("Simulation completed.")
-        #print("Case prefixes:", [case.prefix.get_prefix() for case in self.completed_cases])
-        print("Total cycle time:", sum(case.cycle_time for case in self.completed_cases) / len(self.completed_cases))
-        print("Total number of cases:", len(self.completed_cases))
-        print("Total number of tasks:", self.total_generated_tasks)
-        print("Total number of resources:", len(self.resources))
+        # print("Simulation completed.")
+        # print("Total cycle time:", sum(case.cycle_time for case in self.completed_cases) / len(self.completed_cases))
+        # print("Total number of cases:", len(self.completed_cases))
+        # print("Total number of tasks:", self.total_generated_tasks)
+        # print("Total number of resources:", len(self.resources))
         return False  # Simulation is done
 
     def reset(self):

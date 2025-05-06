@@ -9,6 +9,8 @@ import os
 from stable_baselines3.common.callbacks import CheckpointCallback
 import pandas as pd
 from callbacks import PPOEvalCallback
+import sys
+
 
 def make_env(config_type, nr_cases):
     """Create and initialize the environment"""
@@ -26,6 +28,7 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, plot=False)
         total_timesteps: Total timesteps for training
         plot: Whether to plot policy usage and cycle time after training
     """
+    print(f"Training policy for {config_type} with {nr_cases} cases for {total_timesteps} timesteps")
     # Create the environment
     env = make_env(config_type, nr_cases)
     
@@ -58,7 +61,7 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, plot=False)
     
     model.learn(
         total_timesteps=total_timesteps,
-        progress_bar=True,
+        progress_bar=False,
         callback=eval_callback
     )
     
@@ -148,33 +151,18 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
                bbox_to_anchor=(0.5, -0.1), ncol=int((len(policy_names) + 1)/2))
     
     plt.tight_layout()
+    os.makedirs(os.path.dirname('figures/training'), exist_ok=True)
     plt.savefig(f'figures/training/{env.simulator.config_type}_action_count.png')
     if show_plot:
         plt.show()
 
 def main():
     # Train the policy
-    for config_type in ['parallel_xor', 'parallel', 'low_utilization', 'high_utilization', 'slow_server', 'down_stream', 'n_system']:
-        model = train_policy(config_type, nr_cases=1000, total_timesteps=1000000, plot=True)
-    
-    # Optional: Test the trained policy
-    # env = make_env()
-    # obs, _ = env.reset()
-    
-    # done = False
-    # total_reward = 0
-    
-    # while not done:     
-    #     # Get the action from the trained policy
-    #     action, _ = model.predict(obs, action_masks=env.action_masks(), deterministic=True)
-        
-    #     # Take a step in the environment
-    #     obs, reward, done, _, _ = env.step(action)
-    #     total_reward += reward
-    
-    # print(f"Test evaluation - Total reward: {total_reward:.4f}")
-    # print(f"Average cycle time: {sum(case.cycle_time for case in env.simulator.completed_cases) / len(env.simulator.completed_cases):.4f}")
-
+    # ['parallel_xor', 'parallel', 'low_utilization', 'high_utilization', 'slow_server', 'down_stream', 'n_system']
+    #for config_type in ['parallel_xor', 'parallel', 'low_utilization', 'slow_server', 'down_stream', 'n_system']:
+    config_type = sys.argv[1] if len(sys.argv) > 1 else 'slow_server'
+    model = train_policy(config_type, nr_cases=1000, total_timesteps=5000000, plot=True)
+    # 
 if __name__ == "__main__":
     main()
 
