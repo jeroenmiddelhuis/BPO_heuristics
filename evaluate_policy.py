@@ -13,20 +13,23 @@ def evaluate(config_type, policy, nr_cases, nr_episodes):
     cycle_times = []
 
     for _ in range(nr_episodes):
-        # Main interaction loop
         env.reset()
         done = False
+        step_count = 0
 
         while not done:
             action = policy(simulator)
-            
-            # Take a step in the environment
             obs, reward, done, _, _ = env.step(action)
-        
+            step_count += 1
+
+            # if step_count % 100 == 0:
+            #     queue_lengths = simulator.get_queue_lengths_per_task_type()
+            #     avg_queue_length = np.mean(list(queue_lengths.values()))
+            #     print(f"Step {step_count}: Average queue length = {avg_queue_length:.2f}, Per task type: {queue_lengths}")
+
         assert len(simulator.completed_cases) == nr_cases, f"Expected {nr_cases} completed cases, but got {len(simulator.completed_cases)}"
         cycle_times.append(sum(case.cycle_time for case in simulator.completed_cases) / len(simulator.completed_cases))
-        # print(f"Simulation completed. Total reward: {total_reward:.4f}")
-        # print(f"Average cycle time: {sum(case.cycle_time for case in simulator.completed_cases) / len(simulator.completed_cases):.4f}")
+
 
     # Write results to file
     results_dir = f'results/{config_type}'
@@ -76,9 +79,11 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
 
 if __name__ == "__main__":
     # ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
-    for config_type in ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
+    for config_type in ['complex_parallel_xor']:
         # Evaluate PPO policy
-        evaluate_ppo(config_type, nr_cases=1000, nr_episodes=300)
+        # evaluate_ppo(config_type, nr_cases=1000, nr_episodes=300)
         
-        # for policy in [random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]:
-        #     evaluate(config_type, policy, nr_cases=1000, nr_episodes=300)
+
+        #[random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]
+        for policy in [random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]:
+            evaluate(config_type, policy, nr_cases=1000, nr_episodes=30)

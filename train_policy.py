@@ -12,13 +12,13 @@ from callbacks import PPOEvalCallback
 import sys
 
 
-def make_env(config_type, nr_cases):
+def make_env(config_type, nr_cases, reward_function="cycle_time"):
     """Create and initialize the environment"""
-    simulator = Simulator(config_type, nr_cases)
+    simulator = Simulator(config_type, nr_cases, reward_function)
     env = Environment(simulator)
     return env
 
-def train_policy(config_type, nr_cases=2500, total_timesteps=100000, plot=False):
+def train_policy(config_type, nr_cases=2500, total_timesteps=100000, reward_function="cycle_time", plot=False):
     """
     Train a MaskablePPO policy
     
@@ -30,7 +30,7 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, plot=False)
     """
     print(f"Training policy for {config_type} with {nr_cases} cases for {total_timesteps} timesteps")
     # Create the environment
-    env = make_env(config_type, nr_cases)
+    env = make_env(config_type, nr_cases, reward_function)
     
     # Create a separate environment for evaluation
     eval_env = make_env(config_type, nr_cases)
@@ -56,6 +56,7 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, plot=False)
         verbose=1,
         n_steps=5120,
         batch_size=256,
+        gamma=0.999,
         tensorboard_log="./tensorboard_logs/"
     )
     
@@ -160,8 +161,8 @@ def main():
     # Train the policy
     # ['parallel_xor', 'parallel', 'low_utilization', 'high_utilization', 'slow_server', 'down_stream', 'n_system']
     #for config_type in ['parallel_xor', 'parallel', 'low_utilization', 'slow_server', 'down_stream', 'n_system']:
-    config_type = sys.argv[1] if len(sys.argv) > 1 else 'slow_server'
-    model = train_policy(config_type, nr_cases=1000, total_timesteps=5000000, plot=True)
+    config_type = sys.argv[1] if len(sys.argv) > 1 else 'complex_parallel_xor'
+    model = train_policy(config_type, nr_cases=1000, total_timesteps=1000000, reward_function="AUC", plot=True)
     # 
 if __name__ == "__main__":
     main()

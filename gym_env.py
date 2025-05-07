@@ -10,6 +10,7 @@ class Environment(Env):
         self.assignments = self.simulator.assignments
         self.actions = [spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy, "postpone"]
         self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
+        self.total_reward = 0
         
         # Add tracking for episode stats
         self.episode_count = 0
@@ -37,11 +38,13 @@ class Environment(Env):
                 'avg_cycle_time': avg_cycle_time
             })
             
-        #print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
+        # print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
+        # print(f'Total reward: {self.total_reward}. Total cycle time: {sum(case.cycle_time for case in self.simulator.completed_cases)}')
         
         self.simulator.reset()
         # Reset action tracking but keep the episode count and stats history
         self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
+        self.total_reward = 0
         self.episode_count += 1
         
         # Run simulation until first decision point
@@ -102,6 +105,7 @@ class Environment(Env):
 
     def get_reward(self):
         reward = self.simulator.reward
+        self.total_reward += reward
         self.simulator.reward = 0
         return reward
     
@@ -118,10 +122,11 @@ class Environment(Env):
         else:
             heuristic_mask = np.array([1.0] * (len(self.actions) - 1), dtype=np.float64)
 
-        if self.simulator.is_arrivals_coming():
-            postpone_possible = np.array([1.0], dtype=np.float64)
-        else:
-            postpone_possible = np.array([0.0], dtype=np.float64)
+        # if self.simulator.is_arrivals_coming():
+        #     postpone_possible = np.array([1.0], dtype=np.float64)
+        # else:
+        #     postpone_possible = np.array([0.0], dtype=np.float64)
+        postpone_possible = np.array([1.0], dtype=np.float64) if sum(heuristic_mask) == 0 else np.array([0.0], dtype=np.float64)
 
         return np.concatenate([heuristic_mask, postpone_possible])
 

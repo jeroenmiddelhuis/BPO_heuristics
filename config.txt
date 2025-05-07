@@ -205,5 +205,56 @@
             "outputs": {}
         }
     }
+},
+
+"complex_parallel_xor": {
+    "arrival_rate": 0.5,
+    "task_types": ["start", "a", "b", "c", "d", "e", "f", "g", "end"],
+    "resources": ["r1", "r2", "r3", "r4", "r5"],
+    "resource_pools": {
+        "r1": {"a": 2.7, "b": 2.0, "e": 2.3},
+        "r2": {"b": 2.9, "c": 1.8, "f": 2.5},
+        "r3": {"c": 2.5, "d": 1.8, "g": 1.7},
+        "r4": {"d": 2.4, "e": 2.2, "f": 1.8},
+        "r5": {"a": 1.8, "g": 3.1}
+    },
+    "process_structure": {
+        "start": {
+            "inputs": [],
+            "outputs": {"a": 1}
+        },
+        "a": {
+            "inputs": ["start"],
+            "outputs": {"b,c": 0.6, "d": 0.4}
+        },
+        "b": {
+            "inputs": ["a"],
+            "outputs": {"e": 1}
+        },
+        "c": {
+            "inputs": ["a"],
+            "outputs": {"f": 1}
+        },
+        "d": {
+            "inputs": ["a"],
+            "outputs": {"f": 1}
+        },
+        "e": {
+            "inputs": ["b"],
+            "outputs": {"f": 1}
+        },
+        "f": {
+            "inputs": ["c,e", "d"],
+            "outputs": {"g": 1}
+        },
+        "g": {
+            "inputs": ["f"],
+            "outputs": {"end": 1}
+        },
+        "end": {
+            "inputs": ["g"],
+            "outputs": {}
+        }
+    }
 }
 }

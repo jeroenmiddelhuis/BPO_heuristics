@@ -104,9 +104,11 @@ class Resource:
         self.assigned_task = None
 
 class Simulator:
-    def __init__(self, config_type, nr_cases):
+    def __init__(self, config_type, nr_cases, reward_function="cycle_time", print_results=False):
         self.config_type = config_type
         self.nr_cases = nr_cases
+        self.reward_function = reward_function
+        self.print_results = print_results
 
         self.events = []
         self.now = 0
@@ -119,6 +121,7 @@ class Simulator:
 
         # Reinforcement learning parameters
         self.reward = 0
+        self.last_reward_update = 0
 
         # Initialize the first case arrival
         self.events.append(Event(EventType.CASE_ARRIVAL, self.sample_interarrival_time()))
@@ -164,9 +167,15 @@ class Simulator:
             self.now = event.time
 
             if event.event_type == EventType.TAKE_ACTION:
+                if self.reward_function == "AUC":
+                    self.reward += -len(self.ongoing_cases) * (self.now - self.last_reward_update)
+                    self.last_reward_update = self.now
                 return True  # Decision point reached, return control to gym
             
             if event.event_type == EventType.CASE_ARRIVAL:
+                if self.reward_function == "AUC":
+                    self.reward += -len(self.ongoing_cases) * (self.now - self.last_reward_update)
+                    self.last_reward_update = self.now
                 case = self.generate_case()
                 self.ongoing_cases.append(case)
                 self.generate_tasks(case)
@@ -188,24 +197,29 @@ class Simulator:
                     self.events.append(Event(EventType.TAKE_ACTION, self.now))
 
             elif event.event_type == EventType.CASE_DEPARTURE:
+                if self.reward_function == "AUC":
+                    self.reward += -len(self.ongoing_cases) * (self.now - self.last_reward_update)
+                    self.last_reward_update = self.now
                 event.case.departure_time = self.now
                 event.case.cycle_time = event.case.departure_time - event.case.arrival_time
-                self.reward += 1 / (1 + event.case.cycle_time)
+                if self.reward_function == "cycle_time":
+                    self.reward += 1 / (1 + event.case.cycle_time)
                 self.ongoing_cases.remove(event.case)
                 self.completed_cases.append(event.case)
                 
             self.events.sort()
         
-        # print("Simulation completed.")
-        # print("Total cycle time:", sum(case.cycle_time for case in self.completed_cases) / len(self.completed_cases))
-        # print("Total number of cases:", len(self.completed_cases))
-        # print("Total number of tasks:", self.total_generated_tasks)
-        # print("Total number of resources:", len(self.resources))
+        if self.print_results:
+            print("Simulation completed.")
+            print("Total cycle time:", sum(case.cycle_time for case in self.completed_cases) / len(self.completed_cases))
+            print("Total number of cases:", len(self.completed_cases))
+            print("Total number of tasks:", self.total_generated_tasks)
+            print("Total number of resources:", len(self.resources))
         return False  # Simulation is done
 
     def reset(self):
         """Reset the simulator to its initial state."""
-        self.__init__(self.config_type, self.nr_cases)
+        self.__init__(self.config_type, self.nr_cases, self.reward_function)
 
     def process_assignment(self, resource, task):
         """Process a single action by taking the TAKE_ACTION event and performing the action."""     
@@ -337,6 +351,17 @@ class Simulator:
                 for resource in self.get_available_resources() 
                 if task.task_type in resource.eligibility]
     
+    def get_queue_lengths_per_task_type(self):
+        """
+        Returns a dict mapping each task_type to the number of ongoing tasks of that type (queue length).
+        """
+        queue_lengths = {task_type: 0 for task_type in self.task_types}
+        for case in self.ongoing_cases:
+            for task in case.ongoing_tasks:
+                if task.task_type in queue_lengths:
+                    queue_lengths[task.task_type] += 1
+        return queue_lengths
+
     def get_possible_resource_to_task_type_assignments(self):
         """
         Get all possible assignments of resources to task types that are currently ongoing.
