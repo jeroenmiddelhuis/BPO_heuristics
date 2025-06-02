@@ -219,7 +219,7 @@ class Simulator:
 
     def reset(self):
         """Reset the simulator to its initial state."""
-        self.__init__(self.config_type, self.nr_cases, self.reward_function)
+        self.__init__(self.config_type, self.nr_cases, self.reward_function, self.print_results)
 
     def process_assignment(self, resource, task):
         """Process a single action by taking the TAKE_ACTION event and performing the action."""     

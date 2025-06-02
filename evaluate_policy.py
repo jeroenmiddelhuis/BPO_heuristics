@@ -29,7 +29,7 @@ def evaluate(config_type, policy, nr_cases, nr_episodes):
 
         assert len(simulator.completed_cases) == nr_cases, f"Expected {nr_cases} completed cases, but got {len(simulator.completed_cases)}"
         cycle_times.append(sum(case.cycle_time for case in simulator.completed_cases) / len(simulator.completed_cases))
-
+        print(sum(case.cycle_time for case in simulator.completed_cases) / len(simulator.completed_cases))
 
     # Write results to file
     results_dir = f'results/{config_type}'
@@ -51,7 +51,7 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
 
     cycle_times = []
     track_actions = []
-    actions = [spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy, "postpone"]
+    policies = [spt_policy, fifo_policy, random_policy, "postpone"]
 
     for _ in range(nr_episodes):
         # Main interaction loop
@@ -59,7 +59,12 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
         done = False
 
         while not done:
-            action, probabilities = model.predict(obs, action_masks=env.action_masks(), deterministic=False)
+            action, probabilities = model.predict(obs, action_masks=env.action_masks(), deterministic=True)
+            # ppo_assignment = policies[action](simulator)
+            # spt_assignment = spt_policy(simulator)
+            # if ppo_assignment != spt_assignment:
+            #     print(f"Discrepancy found: PPO assignment {ppo_assignment} vs SPT assignment {spt_assignment}")
+
             #print(f"Action probabilities: {probabilities}", f"Action: {action}")
             obs, reward, done, _, _ = env.step(np.int32(action))
 
@@ -72,18 +77,18 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
     os.makedirs(results_dir, exist_ok=True)
     results_file = f'{results_dir}/{config}_ppo.txt'
     with open(results_file, 'w') as f:
-        f.write("cycle_time,spt_policy,fifo_policy,shortest_queue_policy,longest_queue_policy,postpone\n")
+        f.write("cycle_time,spt_policy,fifo_policy,random_policy,postpone\n")
         for i, cycle_time in enumerate(cycle_times):
-            f.write(f"{cycle_time},{track_actions[i]["spt_policy"]},{track_actions[i]["fifo_policy"]},{track_actions[i]["shortest_queue_policy"]},{track_actions[i]["longest_queue_policy"]},{track_actions[i]["postpone"]}\n")
+            f.write(f"{cycle_time},{track_actions[i]["spt_policy"]},{track_actions[i]["fifo_policy"]},{track_actions[i]["random_policy"]},{track_actions[i]["postpone"]}\n")
 
 
 if __name__ == "__main__":
     # ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
-    for config_type in ['complex_parallel_xor']:
+    for config_type in ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system']:
         # Evaluate PPO policy
-        # evaluate_ppo(config_type, nr_cases=1000, nr_episodes=300)
+        # evaluate_ppo(config_type, nr_cases=2500, nr_episodes=300)
         
 
         #[random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]
-        for policy in [random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]:
-            evaluate(config_type, policy, nr_cases=1000, nr_episodes=30)
+        for policy in [spt_policy, fifo_policy, random_policy]:
+            evaluate(config_type, policy, nr_cases=2500, nr_episodes=300)

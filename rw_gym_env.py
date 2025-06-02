@@ -1,6 +1,7 @@
 from gymnasium import spaces, Env
 import numpy as np
-from heuristics import random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy
+from rw_heuristics import random_policy, spt_policy, fifo_policy
+
 class Environment(Env):
     def __init__(self, simulator) -> None:
         super().__init__()
@@ -8,7 +9,7 @@ class Environment(Env):
         
         # Define action and observation spaces
         self.assignments = self.simulator.assignments
-        self.actions = [spt_policy, fifo_policy, random_policy, "postpone"]
+        self.actions = [spt_policy, fifo_policy, random_policy]
         self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
         self.total_reward = 0
         
@@ -27,16 +28,16 @@ class Environment(Env):
     def reset(self, seed=None):
         """Reset the environment and return the initial observation."""
         # Save stats from previous episode if it exists
-        if self.episode_count > 0:
-            avg_cycle_time = 0
-            if self.simulator.completed_cases:
-                avg_cycle_time = sum(case.cycle_time for case in self.simulator.completed_cases) / len(self.simulator.completed_cases)
+        # if self.episode_count > 0:
+        #     avg_cycle_time = 0
+        #     if self.simulator.completed_cases:
+        #         avg_cycle_time = sum(case.cycle_time for case in self.simulator.completed_cases) / len(self.simulator.completed_cases)
             
-            self.stats_history.append({
-                'episode': self.episode_count,
-                'actions': self.track_actions.copy(),
-                'avg_cycle_time': avg_cycle_time
-            })
+        #     self.stats_history.append({
+        #         'episode': self.episode_count,
+        #         'actions': self.track_actions.copy(),
+        #         'avg_cycle_time': avg_cycle_time
+        #     })
             
         print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
         print(f'Total reward: {self.total_reward}. Total cycle time: {sum(case.cycle_time for case in self.simulator.completed_cases)}')
@@ -88,7 +89,7 @@ class Environment(Env):
 
     def observation(self):
         # Resource features - add debug prints
-        resource_features = np.array([resource.is_available() for resource in self.simulator.resources], dtype=np.float64)
+        resource_features = np.array([resource in self.simulator.available_resources for resource in self.simulator.resources], dtype=np.float64)
         
         # Assignment features
         assignment_features = np.array([1.0 if resource.assigned_task is not None and 
@@ -116,19 +117,9 @@ class Environment(Env):
         pass
 
     def action_masks(self):
-        assignment_masks = self.simulator.get_assignment_masks()
-        if sum(assignment_masks) == 0:
-            heuristic_mask = np.array([0.0] * (len(self.actions) - 1), dtype=np.float64)
-        else:
-            heuristic_mask = np.array([1.0] * (len(self.actions) - 1), dtype=np.float64)
-
-        if self.simulator.is_arrivals_coming():
-            postpone_possible = np.array([1.0], dtype=np.float64)
-        else:
-            postpone_possible = np.array([0.0], dtype=np.float64)
-        #postpone_possible = np.array([1.0], dtype=np.float64) if sum(heuristic_mask) == 0 else np.array([0.0], dtype=np.float64)
-
-        return np.concatenate([heuristic_mask, postpone_possible])
+        """For now we only use heuristics as actions, so all actions are available."""
+        heuristic_mask = np.array([1.0] * len(self.actions), dtype=np.float64)
+        return heuristic_mask
 
     def close(self):
         # Clean up resources

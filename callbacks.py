@@ -4,6 +4,13 @@ import numpy as np
 from stable_baselines3.common.callbacks import BaseCallback
 
 
+from typing import Callable
+import os
+import numpy as np
+import pandas as pd
+from stable_baselines3.common.callbacks import BaseCallback
+
+
 class PPOEvalCallback(BaseCallback):
     """
     Callback for evaluating and saving a PPO model.
@@ -29,6 +36,11 @@ class PPOEvalCallback(BaseCallback):
         self.best_model_path = best_model_path
         self.best_mean_cycle_time = float("inf")
         self.update_count = 0
+        # Add storage for evaluation history
+        self.eval_history = {
+            'timesteps': [],
+            'mean_cycle_time': []
+        }
         
     def _init_callback(self):
         # Create folder if needed
@@ -83,6 +95,10 @@ class PPOEvalCallback(BaseCallback):
         if cycle_times:
             mean_cycle_time = np.mean(cycle_times)
             
+            # Record evaluation results
+            self.eval_history['timesteps'].append(self.num_timesteps)
+            self.eval_history['mean_cycle_time'].append(mean_cycle_time)
+            
             if self.verbose > 0:
                 print(f"Mean cycle time over {self.n_eval_episodes} episodes: {mean_cycle_time:.2f}")
                 print(f"Previous best mean cycle time: {self.best_mean_cycle_time:.2f}")
@@ -96,6 +112,26 @@ class PPOEvalCallback(BaseCallback):
                 self.model.save(self.best_model_path)
         
         return True
+    
+    def save_eval_results(self, config_type):
+        """
+        Save evaluation results to a CSV file
+        
+        Args:
+            config_type: Configuration type used for the simulation
+        """
+        if not self.eval_history['timesteps']:
+            print("No evaluation results to save.")
+            return
+            
+        # Create DataFrame
+        df = pd.DataFrame(self.eval_history)
+        
+        # Save to CSV
+        os.makedirs('data', exist_ok=True)
+        csv_path = f'data/{config_type}_eval_results.csv'
+        df.to_csv(csv_path, index=False)
+        print(f"Evaluation results saved to {csv_path}")
 
 def linear_schedule(initial_value: float) -> Callable[[float], float]:
     def func(progress_remaining: float) -> float:

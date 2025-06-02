@@ -27,7 +27,7 @@ def objective(trial):
     # Create environment
     config_type = "complex_parallel_xor"
     nr_cases = 1000
-    env = make_env(config_type, nr_cases, reward_function="AUC")
+    env = make_env(config_type, nr_cases, reward_function="AUC", print_results=True)
 
     # Create model with suggested hyperparameters
     model = MaskablePPO(
@@ -41,7 +41,7 @@ def objective(trial):
         ent_coef=ent_coef,
         n_epochs=n_epochs,
         policy_kwargs=dict(net_arch=net_arch),
-        verbose=0,
+        verbose=1,
     )
 
     # Train for a small number of timesteps for tuning
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         storage="sqlite:///hyperparameter_tuning/ppo_hyperparam_tuning.db",
         load_if_exists=True,
     )
-    study.optimize(objective, n_trials=100, n_jobs=12)
+    study.optimize(objective, n_trials=100, n_jobs=2)
     print("Best hyperparameters:", study.best_params)
 
     # Save all trial results to a JSON file

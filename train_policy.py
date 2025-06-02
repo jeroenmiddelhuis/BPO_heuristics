@@ -11,10 +11,21 @@ import pandas as pd
 from callbacks import PPOEvalCallback
 import sys
 
-
-def make_env(config_type, nr_cases, reward_function="cycle_time"):
+optimal_hyperparameters = {
+    'n_layers': 2,
+    'n_neurons': 128,
+    'n_steps': 4096,
+    'batch_size': 64,
+    'learning_rate': 0.003,
+    'gamma': 0.999,
+    'gae_lambda': 0.8601744320443107,
+    'ent_coef': 0.03665671073131277,
+    'n_epochs': 20
+}
+    
+def make_env(config_type, nr_cases, reward_function="cycle_time", print_results=False):
     """Create and initialize the environment"""
-    simulator = Simulator(config_type, nr_cases, reward_function)
+    simulator = Simulator(config_type, nr_cases, reward_function, print_results)
     env = Environment(simulator)
     return env
 
@@ -30,10 +41,10 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, reward_func
     """
     print(f"Training policy for {config_type} with {nr_cases} cases for {total_timesteps} timesteps")
     # Create the environment
-    env = make_env(config_type, nr_cases, reward_function)
+    env = make_env(config_type, nr_cases, reward_function, print_results=True)
     
     # Create a separate environment for evaluation
-    eval_env = make_env(config_type, nr_cases)
+    eval_env = make_env(config_type, nr_cases, reward_function, print_results=True)
 
     # Create the model directory if it doesn't exist
     save_path = f"models/PPO/{config_type}/{config_type}_final"
@@ -44,9 +55,17 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, reward_func
     eval_callback = PPOEvalCallback(
         eval_env=eval_env,
         eval_freq=10,
-        n_eval_episodes=10,
+        n_eval_episodes=50,
         best_model_path=best_model_path,
         verbose=1
+    )
+
+    # Build net_arch
+    net_arch = dict(
+        pi=[optimal_hyperparameters['n_neurons'] 
+            for _ in range(optimal_hyperparameters['n_layers'])],
+        vf=[optimal_hyperparameters['n_neurons'] 
+            for _ in range(optimal_hyperparameters['n_layers'])]
     )
 
     # Create and train the model
@@ -54,10 +73,14 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, reward_func
         MaskableActorCriticPolicy,
         env,
         verbose=1,
-        n_steps=5120,
-        batch_size=256,
-        gamma=0.999,
-        tensorboard_log="./tensorboard_logs/"
+        n_steps=optimal_hyperparameters['n_steps'],
+        batch_size=optimal_hyperparameters['batch_size'],
+        learning_rate=optimal_hyperparameters['learning_rate'],
+        gamma=optimal_hyperparameters['gamma'],
+        gae_lambda=optimal_hyperparameters['gae_lambda'],
+        ent_coef=optimal_hyperparameters['ent_coef'],
+        n_epochs=optimal_hyperparameters['n_epochs'],
+        policy_kwargs=dict(net_arch=net_arch)
     )
     
     model.learn(
@@ -69,6 +92,9 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, reward_func
     # Save the final model
     model.save(save_path)
     print(f"Model saved to {save_path}")
+    
+    # Save evaluation results to CSV
+    eval_callback.save_eval_results(config_type)
     
     # Generate plot if requested
     if plot:
@@ -161,8 +187,8 @@ def main():
     # Train the policy
     # ['parallel_xor', 'parallel', 'low_utilization', 'high_utilization', 'slow_server', 'down_stream', 'n_system']
     #for config_type in ['parallel_xor', 'parallel', 'low_utilization', 'slow_server', 'down_stream', 'n_system']:
-    config_type = sys.argv[1] if len(sys.argv) > 1 else 'complex_parallel_xor'
-    model = train_policy(config_type, nr_cases=1000, total_timesteps=1000000, reward_function="AUC", plot=True)
+    config_type = sys.argv[1] if len(sys.argv) > 1 else 'n_system'
+    model = train_policy(config_type, nr_cases=1000, total_timesteps=5000000, reward_function="AUC", plot=True)
     # 
 if __name__ == "__main__":
     main()
