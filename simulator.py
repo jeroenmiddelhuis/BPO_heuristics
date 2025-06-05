@@ -3,6 +3,7 @@ import random
 from enum import Enum, auto
 import json
 from heuristics import random_policy, spt_policy, fifo_policy
+from collections import Counter
 
 class Event:
     def __init__(self, event_type, time, case=None, task=None, resource=None):
@@ -354,13 +355,23 @@ class Simulator:
     def get_queue_lengths_per_task_type(self):
         """
         Returns a dict mapping each task_type to the number of ongoing tasks of that type (queue length).
+        Only counts task types that exist in self.task_types.
         """
-        queue_lengths = {task_type: 0 for task_type in self.task_types}
-        for case in self.ongoing_cases:
-            for task in case.ongoing_tasks:
-                if task.task_type in queue_lengths:
-                    queue_lengths[task.task_type] += 1
-        return queue_lengths
+        # Efficiently count task types using Counter
+        task_counts = Counter(task.task_type for case in self.ongoing_cases 
+                            for task in case.ongoing_tasks 
+                            if task.task_type in self.task_types)
+        
+        # Initialize with all task types (to ensure even zero counts are included)
+        return {task_type: task_counts.get(task_type, 0) for task_type in self.task_types}
+    
+    def get_resources_for_task_type(self, task_type):
+        """
+        Get all resources that are eligible for the given task type.
+        Returns a list of Resource objects.
+        """
+        return [resource for resource in self.resources if task_type in resource.eligibility]
+
 
     def get_possible_resource_to_task_type_assignments(self):
         """

@@ -1,7 +1,10 @@
 from simulator import Simulator
 from gym_env import Environment
 import numpy as np
-from heuristics import random_policy, spt_policy, fifo_policy, longest_queue_policy, shortest_queue_policy
+from heuristics import random_policy, spt_policy, fifo_policy
+from heuristics import hrrn_policy, longest_queue_policy, shortest_queue_policy
+from heuristics import least_flexible_resource_policy, most_flexible_resource_policy
+from heuristics import least_flexible_activity_policy, most_flexible_activity_policy
 import os
 from sb3_contrib import MaskablePPO
 
@@ -84,11 +87,11 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
 
 if __name__ == "__main__":
     # ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
-    for config_type in ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system']:
+    for config_type in ['n_system']:
         # Evaluate PPO policy
         # evaluate_ppo(config_type, nr_cases=2500, nr_episodes=300)
         
 
         #[random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]
-        for policy in [spt_policy, fifo_policy, random_policy]:
-            evaluate(config_type, policy, nr_cases=2500, nr_episodes=300)
+        for policy in [least_flexible_resource_policy]:
+            evaluate(config_type, policy, nr_cases=2500, nr_episodes=30)

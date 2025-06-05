@@ -1,5 +1,5 @@
 import optuna
-from train_policy import make_env
+from rw_train_policy import make_env
 from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
 from sb3_contrib import MaskablePPO
 import numpy as np
@@ -25,9 +25,9 @@ def objective(trial):
     )
 
     # Create environment
-    config_type = "complex_parallel_xor"
+    problem_instance = "bpi2017"
     nr_cases = 1000
-    env = make_env(config_type, nr_cases, reward_function="AUC", print_results=True)
+    env = make_env(problem_instance, nr_cases)
 
     # Create model with suggested hyperparameters
     model = MaskablePPO(
@@ -51,8 +51,7 @@ def objective(trial):
     model.save(f"hyperparameter_tuning/models/{trial.number}_model")
 
     # Re-create environment for evaluation to avoid training artifacts
-    eval_env = make_env(config_type, nr_cases)
-    eval_simulator = eval_env.simulator
+    eval_env = make_env(problem_instance, nr_cases)
 
     nr_eval_episodes = 100
     cycle_times = []
@@ -66,15 +65,15 @@ def objective(trial):
             obs, reward, done, _, _ = eval_env.step(np.int32(action))
 
         # Compute average cycle time for this episode
-        if len(eval_simulator.completed_cases) == nr_cases:
-            avg_cycle_time = sum(case.cycle_time for case in eval_simulator.completed_cases) / len(eval_simulator.completed_cases)
-            cycle_times.append(avg_cycle_time)
-        else:
-            # Penalize if not all cases completed
-            cycle_times.append(float("inf"))
+        avg_cycle_time = eval_env.simulator.total_cycle_time / eval_env.simulator.n_finalized_cases
+        cycle_times.append(avg_cycle_time)
+
 
     # Return mean cycle time over evaluation episodes
     mean_cycle_time = np.mean(cycle_times) if cycle_times else float("inf")
+    print(f"Trial {trial.number} - Mean Cycle Time: {mean_cycle_time:.2f}")
+    print(f"Hyperparameters: {trial.params}")
+    print(f"Trial Value: {mean_cycle_time:.2f}")
     return mean_cycle_time
 
 if __name__ == "__main__":
@@ -86,7 +85,7 @@ if __name__ == "__main__":
         storage="sqlite:///hyperparameter_tuning/ppo_hyperparam_tuning.db",
         load_if_exists=True,
     )
-    study.optimize(objective, n_trials=100, n_jobs=2)
+    study.optimize(objective, n_trials=100, n_jobs=16)
     print("Best hyperparameters:", study.best_params)
 
     # Save all trial results to a JSON file

@@ -9,296 +9,291 @@ from itertools import permutations, combinations
 from abc import ABC, abstractmethod
 
 
-def spt_policy(simulator):
 
-    return
+def spt_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+    
+    # Print all possible assignments with their expected processing times
+    # print("Possible assignments (Resource, Task Type) and their expected processing times:")
+    # for assignment in possible_assignments:
+    #     resource, task_type = assignment
+    #     processing_time = simulator.problem.processing_time_distribution[(task_type, resource)][0]
+    #     print(f"  {assignment}: {processing_time}")
+    
+    assignment = min(possible_assignments, key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
+    resource, task_type = assignment
+    
+    # Print the selected resource-task type assignment
+    #print(f"Selected assignment: {assignment} with processing time: {simulator.problem.processing_time_distribution[(task_type, resource)][0]}")
+
+    # Find the corresponding task with the lowest task id in the ongoing tasks (Random + SPT policy)
+    assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+    resource, task = assignment
+    
+    # Print the final resource-task assignment
+    #print(f"Final assignment: ({resource}, {task})")
+    
+    return (resource, task)
 
 def fifo_policy(simulator):
-    return 
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+
+    # Sort the list of tasks by their case_id attribute (assuming case_id represents arrival order)
+    sorted_tasks = sorted(simulator.unassigned_tasks.values(), key=lambda task: task.case_id)
+    
+    # Iterate through tasks in FIFO order
+    for task in sorted_tasks:
+        # Find all resources that can process this task type
+        matching_assignments = [(resource, task_type) for resource, task_type in possible_assignments 
+                              if task.task_type == task_type]
+        # print(task.case_id, matching_assignments)
+        # print("eligbile resources:", [(resource, resource in simulator.available_resources) for resource in simulator.problem_resource_pool[task.task_type]])
+        if matching_assignments:
+            # Select the resource with the shortest processing time for this task type
+            assignment = min(matching_assignments, key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
+            
+            # Return the final assignment
+            resource, _ = assignment
+            #print("assignment made:", assignment)
+            return (resource, task)
+    return None
 
 def random_policy(simulator):
-    return 
-
-
-
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
     
+    # Randomly select a task and resource from the possible assignments
+    resource, task_type = random.choice(possible_assignments)
 
+    # Find the corresponding task with the lowest task id in the ongoing tasks (Random + SPT policy)
+    assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+    resource, task = assignment
+    return (resource, task)
 
-class Planner(ABC):
-    """Abstract class that all planners must implement."""
-
-    @abstractmethod
-    def plan(self, available_resources, unassigned_tasks, resource_pool):
-        """
-        Assign tasks to resources from the simulation environment.
-
-        :param environment: a :class:`.Simulator`
-        :return: [(task, resource, moment)], where
-            task is an instance of :class:`.Task`,
-            resource is one of :attr:`.Problem.resources`, and
-            moment is a number representing the moment in simulation time
-            at which the resource must be assigned to the task (typically, this can also be :attr:`.Simulator.now`).
-        """
-        raise NotImplementedError
-
-
-# Greedy assignment
-class GreedyPlanner(Planner):
-    """A :class:`.Planner` that assigns tasks to resources in an anything-goes manner."""
-
-    def plan(self, available_resources, unassigned_tasks, resource_pool):
-        assignments = []
-        available_resources = available_resources.copy()
-        # assign the first unassigned task to the first available resource, the second task to the second resource, etc.
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if resource in resource_pool[task.task_type]:
-                    available_resources.remove(resource)
-                    assignments.append((task, resource))
-                    break
-        return assignments
-
-    def report(self, event):
-        pass#print(event)
-
-class RandomPlanner(Planner):
-    """A :class:`.Planner` that assigns tasks to resources in an anything-goes manner."""
-
-    def get_possible_assignments(self, available_resources, unassigned_tasks, resource_pool):
-        possible_assignments = []
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if resource in resource_pool[task.task_type]:
-                    possible_assignments.append((resource, task))
-        return possible_assignments
+def least_flexible_resource_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
     
-    def plan(self, available_resources, unassigned_tasks, resource_pool):
-        available_resources = available_resources.copy()
-        unassigned_tasks = unassigned_tasks.copy()        
-        assignments = []
+    # Only consider available resources as candidates
+    candidate_resources = set(resource for resource, _ in possible_assignments)
 
-        possible_assignments = self.get_possible_assignments(available_resources, unassigned_tasks, resource_pool)
-
-        #while len(possible_assignments) > 0:
-        assignment = random.choice(possible_assignments)
-        unassigned_tasks.remove(assignment[1])
-        available_resources.remove(assignment[0])
-        assignment = (assignment[0], assignment[1].task_type)
-        assignments.append(assignment)
-
-
-        return assignments
-
-    def report(self, event):
-        pass#print(event)
-
-class ShortestProcessingTimeStandardized(Planner):
-    def __init__(self) -> None:
-        with open('distributions_standardized.json', 'r') as fp:
-            self.distributions = json.load(fp)
-
-    def linkSimulator(self, simulator):
-        self.problem = simulator.problem
-        distributions_or = simulator.problem.processing_time_distribution
-        # Initialize the transformed dictionary
-        self.distributions = {}
-
-        # Iterate over the input dictionary
-        for (main_key, sub_key), (first_value, _) in distributions_or.items():
-            if main_key not in self.distributions:
-                self.distributions[main_key] = {}
-            self.distributions[main_key][sub_key] = first_value
-
-        #standardize the distributions
-        for key in self.distributions.keys():
-            if key == 'Turning Rework':
-                print(self.distributions[key])
-            values = list(self.distributions[key].values())
-            mean = np.mean(values)
-            std = np.std(values)
-            for sub_key in self.distributions[key].keys():
-                if std != 0:
-                    self.distributions[key][sub_key] = (self.distributions[key][sub_key] - mean) / std
-                else:
-                    self.distributions[key][sub_key] = mean
-
-    def get_possible_assignments(self, available_resources, unassigned_tasks, resource_pool):
-        possible_assignments = []
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if resource in resource_pool[task.task_type]:
-                    possible_assignments.append((resource, task))
-        return possible_assignments
+    # Find the resource with the least flexibility (i.e., the fewest task types it can process)
+    # For each resource, count how many different task types it can handle
+    resource_flexibility = {}
+    for resource in candidate_resources:
+        resource_flexibility[resource] = sum(1 for task_type in simulator.task_types 
+                                          if resource in simulator.problem_resource_pool[task_type])
     
-    def plan(self, available_resources, unassigned_tasks, resource_pool):
-        available_resources = available_resources.copy()
-        unassigned_tasks = unassigned_tasks.copy()        
-        assignments = []
+    # Sort resources by flexibility (ascending)
+    least_flexible_resources = sorted(candidate_resources, key=lambda r: resource_flexibility[r])
 
-        possible_assignments = self.get_possible_assignments(available_resources, unassigned_tasks, resource_pool)
-
-        while len(possible_assignments) > 0:
-
-            spt = 999999
-            best_assignment = None
-            for assignment in possible_assignments: #assignment[0] = task, assignment[1]= resource
-                if self.distributions[assignment[1].task_type][assignment[0]] < spt:
-                    spt = self.distributions[assignment[1].task_type][assignment[0]]
-                    best_assignment = assignment
-
-            #check if best assignment is None
-            if best_assignment is None:
-                break
-            unassigned_tasks.remove(best_assignment[1])
-            available_resources.remove(best_assignment[0])
-            best_assignment = (best_assignment[0], best_assignment[1].task_type)
-            assignments.append(best_assignment)
-
-            possible_assignments = self.get_possible_assignments(available_resources, unassigned_tasks, resource_pool)
-
-        return assignments
-
-    def report(self, event):
-        pass#print(event)    
-
-
-class ShortestProcessingTime(Planner):
-    def __init__(self) -> None:
-        #with open('distributions.json', 'r') as fp:
-        #    self.distributions = json.load(fp)
-        self.distributions = None
-
-    def linkSimulator(self, simulator):
-        self.problem = simulator.problem
-        self.simulator = simulator
-        distributions_or = simulator.problem.processing_time_distribution
-        # Initialize the transformed dictionary
-        self.distributions = {}
-
-        # Iterate over the input dictionary
-        for (main_key, sub_key), (first_value, _) in distributions_or.items():
-            if main_key not in self.distributions:
-                self.distributions[main_key] = {}
-            self.distributions[main_key][sub_key] = first_value
-
-    def get_possible_assignments(self, available_resources, unassigned_tasks, resource_pool):
-        possible_assignments = []
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if type(task) != str:
-                    task = task.task_type
-                if resource in resource_pool[task]:
-                    possible_assignments.append((resource, task))
-        return possible_assignments
-
-    def get_possible_assignments_original(self, available_resources, unassigned_tasks, resource_pool):
-        possible_assignments = []
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if resource in resource_pool[task.task_type]:
-                    possible_assignments.append((resource, task))
-        return possible_assignments
-    
-    def plan(self, available_resources, unassigned_tasks, resource_pool):
-        available_resources = available_resources.copy()
-        unassigned_tasks = unassigned_tasks.copy()        
-        assignments = []
-
-        possible_assignments = self.get_possible_assignments_original(available_resources, unassigned_tasks, resource_pool)
-        while len(possible_assignments) > 0:            
-            spt = 999999
-            for assignment in possible_assignments: #assignment[0] = task, assignment[1]= resource
-                if self.distributions[assignment[1].task_type][assignment[0]] < spt:
-                    spt = self.distributions[assignment[1].task_type][assignment[0]]
-                    best_assignment = assignment
+    # Try to assign tasks to resources in order of increasing flexibility
+    for least_flexible_resource in least_flexible_resources:
+        matching_assignments = [(resource, task_type) for resource, task_type in possible_assignments 
+                               if resource == least_flexible_resource]
+        if matching_assignments:
+            # Select the assignment with the shortest processing time
+            assignment = min(matching_assignments, 
+                           key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
             
-            unassigned_tasks.remove(best_assignment[1])
-            available_resources.remove(best_assignment[0])
-            best_assignment = (best_assignment[0], best_assignment[1].task_type)
-            assignments.append(best_assignment)
-            possible_assignments = self.get_possible_assignments_original(available_resources, unassigned_tasks, resource_pool)
-        return assignments
+            resource, task_type = assignment
+            # Find the corresponding task
+            assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+            resource, task = assignment
+            return (resource, task)
+    return None
 
-    def report(self, event):
-        pass#print(event)
-
-    def plan_from_trace(self, available_resources, unassigned_tasks, resource_pool):
-        available_resources = available_resources.copy()
-        unassigned_tasks = unassigned_tasks.copy()
-        assignments = []
-
-        possible_assignments = self.get_possible_assignments(available_resources, unassigned_tasks, resource_pool)
-        while len(possible_assignments) > 0:
-            spt = 999999
-            for assignment in possible_assignments:  # assignment[0] = task, assignment[1]= resource
-                if self.distributions[assignment[1]][assignment[0]] < spt:
-                    spt = self.distributions[assignment[1]][assignment[0]]
-                    best_assignment = assignment
-
-            unassigned_tasks.remove(best_assignment[1])
-            available_resources.remove(best_assignment[0])
-            best_assignment = (best_assignment[0], best_assignment[1])
-            assignments.append(best_assignment)
-            possible_assignments = self.get_possible_assignments(available_resources, unassigned_tasks, resource_pool)
-        return assignments
-
-
-class FIFOProcess(Planner):
-    def __str__(self) -> str:
-        return 'FIFO'
-
-    def __init__(self):        
-        self.resource_pools = None # passed through simulator
-        self.task_types = None
-
-    def get_possible_assignments(self, available_resources, unassigned_tasks, resource_pool):
-        possible_assignments = []
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if resource in resource_pool[task.task_type]:
-                    possible_assignments.append((resource, task))
-        return possible_assignments
+def most_flexible_resource_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
     
-    def plan(self, available_resources, available_tasks, resource_pools):
-        available_tasks = available_tasks.copy()
-        available_resources = available_resources.copy()        
-        self.task_types = list(resource_pools.keys())
+    # Only consider available resources as candidates
+    candidate_resources = set(resource for resource, _ in possible_assignments)
 
-        assignments = []   
-        case_priority_order = sorted(list(set([task.case_id for task in available_tasks]))) #cases are characterized by a monotonically increasing case_id
-        priority_case = 0
-        possible_assignments = self.get_possible_assignments(available_resources, available_tasks, resource_pools)
-        while len(possible_assignments) > 0:
-            priority_task_types = [task.task_type for task in available_tasks if task.case_id == case_priority_order[priority_case]]
+    # Find the resource with the most flexibility (i.e., the most task types it can process)
+    # For each resource, count how many different task types it can handle
+    resource_flexibility = {}
+    for resource in candidate_resources:
+        resource_flexibility[resource] = sum(1 for task_type in simulator.task_types 
+                                          if resource in simulator.problem_resource_pool[task_type])
+    
+    # Sort resources by flexibility (descending)
+    most_flexible_resources = sorted(candidate_resources, key=lambda r: resource_flexibility[r], reverse=True)
 
-            best_assignments = []
-            while len(best_assignments) == 0:
-                for possible_assignment in possible_assignments:
-                    if possible_assignment[1].task_type in priority_task_types:
-                        best_assignments.append((possible_assignment[0], possible_assignment[1].task_type))
-                        possible_assignments.remove(possible_assignment)
-                if len(best_assignments) == 0:
-                    priority_case += 1
-                    priority_task_types = [task.task_type for task in available_tasks if task.case_id == case_priority_order[priority_case]]        
+    # Try to assign tasks to resources in order of decreasing flexibility
+    for most_flexible_resource in most_flexible_resources:
+        matching_assignments = [(resource, task_type) for resource, task_type in possible_assignments 
+                               if resource == most_flexible_resource]
+        if matching_assignments:
+            # Select the assignment with the shortest processing time
+            assignment = min(matching_assignments, 
+                           key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
             
+            resource, task_type = assignment
+            # Find the corresponding task
+            assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+            resource, task = assignment
+            return (resource, task)
+    return None
 
-        return best_assignments
+def least_flexible_activity_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+    
+    # Only consider task types that have unassigned tasks
+    candidate_task_types = set(task_type for _, task_type in possible_assignments)
 
-class FIFOActivity(Planner):
-    def __str__(self) -> str:
-        return 'FIFO'
+    # Find the task type with the least flexibility (i.e., the fewest resources that can process it)
+    # For each task type, determine how many resources can handle it
+    task_flexibility = {}
+    for task_type in candidate_task_types:
+        task_flexibility[task_type] = len(simulator.get_resources_for_task_type(task_type))
+    
+    # Sort task types by flexibility (ascending)
+    least_flexible_task_types = sorted(candidate_task_types, key=lambda t: task_flexibility[t])
 
-    def __init__(self):
-        self.resource_pools = None  # passed through simulator
-        self.task_types = None
+    # Try to assign resources to task types in order of increasing flexibility
+    for least_flexible_task_type in least_flexible_task_types:
+        matching_assignments = [(resource, task_type) for resource, task_type in possible_assignments 
+                               if task_type == least_flexible_task_type]
+        if matching_assignments:
+            # Select the assignment with the shortest processing time
+            assignment = min(matching_assignments, 
+                           key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
+            
+            resource, task_type = assignment
+            # Find the corresponding task
+            assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+            resource, task = assignment
+            return (resource, task)
+    return None
 
-    def get_possible_assignments(self, available_resources, unassigned_tasks, resource_pool):
-        possible_assignments = []
-        for task in unassigned_tasks:
-            for resource in available_resources:
-                if resource in resource_pool[task.task_type]:
-                    possible_assignments.append((resource, task))
-        return possible_assignments
+def most_flexible_activity_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+    
+    # Only consider task types that have unassigned tasks
+    candidate_task_types = set(task_type for _, task_type in possible_assignments)
 
-    def plan(self, available_resources, available_tasks, resource_pools):
-        pass
+    # Find the task type with the most flexibility (i.e., the most resources that can process it)
+    # For each task type, determine how many resources can handle it
+    task_flexibility = {}
+    for task_type in candidate_task_types:
+        task_flexibility[task_type] = len(simulator.get_resources_for_task_type(task_type))
+    
+    # Sort task types by flexibility (descending)
+    most_flexible_task_types = sorted(candidate_task_types, key=lambda t: task_flexibility[t], reverse=True)
+
+    # Try to assign resources to task types in order of decreasing flexibility
+    for most_flexible_task_type in most_flexible_task_types:
+        matching_assignments = [(resource, task_type) for resource, task_type in possible_assignments 
+                               if task_type == most_flexible_task_type]
+        if matching_assignments:
+            # Select the assignment with the shortest processing time
+            assignment = min(matching_assignments, 
+                           key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
+            
+            resource, task_type = assignment
+            # Find the corresponding task
+            assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+            resource, task = assignment
+            return (resource, task)
+    return None
+
+def hrrn_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+    
+    best_assignment = None
+    highest_hrrn = -1
+
+    # For each possible assignment, calculate HRRN and select the highest
+    for resource, task_type in possible_assignments:
+        # Find the corresponding task
+        assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+        if assignment[0] is None:  # If no task available for this type
+            continue
+            
+        resource, task = assignment
+        
+        # Calculate expected processing time for this resource-task combination
+        expected_pt = simulator.problem.processing_time_distribution[(task.task_type, resource)][0]
+        
+        # Calculate waiting time for this task
+        waiting_time = simulator.now - simulator.task_arrival_times[task.id]
+        
+        # Calculate HRRN
+        hrrn_score = (waiting_time + expected_pt) / expected_pt
+        
+        # Update best assignment if this one has higher HRRN
+        if hrrn_score > highest_hrrn:
+            highest_hrrn = hrrn_score
+            best_assignment = (resource, task)
+    
+    return best_assignment
+
+def shortest_queue_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+      
+    queue_lengths = simulator.get_queue_lengths_per_task_type()
+
+    # Sort the task types by their queue lengths (ascending)
+    sorted_task_types = sorted(queue_lengths.items(), key=lambda x: x[1])
+
+    # Iterate through task types with the shortest queue first
+    for task_type, queue_length in sorted_task_types:
+        if queue_length > 0:
+            # Find all possible assignments for this task type
+            matching_assignments = [(resource, t_type) for resource, t_type in possible_assignments 
+                                   if t_type == task_type]
+            if matching_assignments:
+                # Select the assignment with the shortest processing time
+                assignment = min(matching_assignments, 
+                               key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
+                
+                resource, task_type = assignment
+                # Find the corresponding task
+                assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+                resource, task = assignment
+                return (resource, task)
+    return None
+
+def longest_queue_policy(simulator):
+    possible_assignments = simulator.get_possible_resource_to_task_type_assignments()
+    if not possible_assignments:
+        return None
+      
+    queue_lengths = simulator.get_queue_lengths_per_task_type()
+
+    # Sort the task types by their queue lengths (descending)
+    sorted_task_types = sorted(queue_lengths.items(), key=lambda x: x[1], reverse=True)
+
+    # Iterate through task types with the longest queue first
+    for task_type, queue_length in sorted_task_types:
+        if queue_length > 0:
+            # Find all possible assignments for this task type
+            matching_assignments = [(resource, t_type) for resource, t_type in possible_assignments 
+                                   if t_type == task_type]
+            if matching_assignments:
+                # Select the assignment with the shortest processing time
+                assignment = min(matching_assignments, 
+                               key=lambda x: simulator.problem.processing_time_distribution[(x[1], x[0])][0])
+                
+                resource, task_type = assignment
+                # Find the corresponding task
+                assignment = simulator.resource_to_task_type_assignment(resource, task_type)
+                resource, task = assignment
+                return (resource, task)
+    return None
