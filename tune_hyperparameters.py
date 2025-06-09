@@ -41,7 +41,7 @@ def objective(trial):
         ent_coef=ent_coef,
         n_epochs=n_epochs,
         policy_kwargs=dict(net_arch=net_arch),
-        verbose=1,
+        verbose=0,
     )
 
     # Train for a small number of timesteps for tuning

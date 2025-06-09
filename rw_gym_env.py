@@ -36,8 +36,8 @@ class Environment(Env):
         # Save stats from previous episode if it exists
         if self.episode_count > 0:
             avg_cycle_time = 0
-            # if self.simulator.completed_cases:
-            #     avg_cycle_time = sum(case.cycle_time for case in self.simulator.completed_cases) / len(self.simulator.completed_cases)
+            if self.simulator.n_finalized_cases:
+                avg_cycle_time = self.simulator.total_cycle_time / self.simulator.n_finalized_cases
             
             self.stats_history.append({
                 'episode': self.episode_count,
@@ -45,8 +45,8 @@ class Environment(Env):
                 'avg_cycle_time': avg_cycle_time
             })
             
-        # print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
-        # print(f'Total reward: {self.total_reward}. Total cycle time: {self.simulator.total_cycle_time}')
+        print(f"Episode {self.episode_count} completed. Action counts: {self.track_actions}")
+        print(f'Total reward: {self.total_reward}. Total cycle time: {self.simulator.total_cycle_time}')
         
         self.simulator.reset()
         # Reset action tracking but keep the episode count and stats history
@@ -107,10 +107,9 @@ class Environment(Env):
                                         dtype=np.float64)
 
         # Task features        
-        task_features = np.array([len(self.simulator.unassigned_tasks_per_type[task_type]) 
+        task_features = np.array([min(1, len(self.simulator.unassigned_tasks_per_type[task_type])/100.0) 
                                   for task_type in self.simulator.task_types], 
                                   dtype=np.float64)
-
         return np.concatenate([resource_features, assignment_features, task_features])
 
     def get_reward(self):

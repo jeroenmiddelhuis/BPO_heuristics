@@ -79,17 +79,20 @@ class PPOEvalCallback(BaseCallback):
                     done = True
                 steps += 1
                 
-                # Avoid infinite loops
-                if steps > 10000:
-                    print("Warning: Episode too long, terminating evaluation")
-                    break
-            
             # Extract cycle time metrics from the completed episode
             if hasattr(self.eval_env.simulator, "completed_cases") and len(self.eval_env.simulator.completed_cases) > 0:
                 episode_cycle_time = sum(case.cycle_time for case in self.eval_env.simulator.completed_cases) / len(self.eval_env.simulator.completed_cases)
                 cycle_times.append(episode_cycle_time)
                 if self.verbose > 0:
                     print(f"Episode {i+1}/{self.n_eval_episodes}: Cycle time = {episode_cycle_time:.2f}")
+            elif hasattr(self.eval_env.simulator, "total_cycle_time") and self.eval_env.simulator.total_cycle_time > 0:
+                # Fallback if no completed cases, use total cycle time
+                episode_cycle_time = self.eval_env.simulator.total_cycle_time / self.eval_env.simulator.n_finalized_cases if self.eval_env.simulator.n_finalized_cases > 0 else 0
+                cycle_times.append(episode_cycle_time)
+                if self.verbose > 0:
+                    print(f"Episode {i+1}/{self.n_eval_episodes}: Cycle time = {episode_cycle_time:.2f}")
+            else:
+                Exception("No completed cases or total cycle time available for evaluation.")
         
         # Calculate average cycle time
         if cycle_times:

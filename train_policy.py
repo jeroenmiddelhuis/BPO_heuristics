@@ -14,12 +14,12 @@ import sys
 optimal_hyperparameters = {
     'n_layers': 2,
     'n_neurons': 128,
-    'n_steps': 4096,
-    'batch_size': 64,
+    'n_steps': 16384,
+    'batch_size': 512,
     'learning_rate': 0.003,
-    'gamma': 0.999,
-    'gae_lambda': 0.8601744320443107,
-    'ent_coef': 0.03665671073131277,
+    'gamma': 1.0,
+    'gae_lambda': 0.8726906492576301,
+    'ent_coef': 0.04429657539113244,
     'n_epochs': 20
 }
     
@@ -131,8 +131,8 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     
     # Create DataFrame and save to CSV
     df = pd.DataFrame(data)
-    os.makedirs('data', exist_ok=True)
-    csv_path = f'data/{env.simulator.config_type}_action_count.csv'
+    os.makedirs('data_training', exist_ok=True)
+    csv_path = f'data_training/{env.simulator.config_type}_action_count.csv'
     df.to_csv(csv_path, index=False)
     print(f"Data saved to {csv_path}")
     
@@ -188,7 +188,7 @@ def main():
     # ['parallel_xor', 'parallel', 'low_utilization', 'high_utilization', 'slow_server', 'down_stream', 'n_system']
     #for config_type in ['parallel_xor', 'parallel', 'low_utilization', 'slow_server', 'down_stream', 'n_system']:
     config_type = sys.argv[1] if len(sys.argv) > 1 else 'n_system'
-    model = train_policy(config_type, nr_cases=1000, total_timesteps=5000000, reward_function="AUC", plot=True)
+    model = train_policy(config_type, nr_cases=2500, total_timesteps=10000000, reward_function="AUC", plot=True)
     # 
 if __name__ == "__main__":
     main()

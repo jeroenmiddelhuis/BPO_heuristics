@@ -1,0 +1,1602 @@
+[
+    {
+        "number": 0,
+        "value": 11.077142808296436,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8156996702416712,
+            "ent_coef": 0.09146830394230687,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 1,
+        "value": 10.601930330395925,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 256,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.0003,
+            "gamma": 0.999,
+            "gae_lambda": 0.9695549485622446,
+            "ent_coef": 0.007954805985607294,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 2,
+        "value": 9.792126921322813,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8686635342842575,
+            "ent_coef": 0.03795725555371348,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 3,
+        "value": 10.094563132236258,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 4096,
+            "batch_size": 512,
+            "learning_rate": 0.003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8847487477257419,
+            "ent_coef": 0.07958554572191512,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 4,
+        "value": 10.060100792016893,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.8562231699847839,
+            "ent_coef": 0.0029822390507589502,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 5,
+        "value": 11.000045821269804,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 64,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9551624213677321,
+            "ent_coef": 0.022540262453223794,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 6,
+        "value": 10.28037481567714,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8507812519768435,
+            "ent_coef": 0.0862466212745735,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 7,
+        "value": 10.810590727210027,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 4096,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.9784929434349057,
+            "ent_coef": 0.02473052291217398,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 8,
+        "value": 10.521212920953298,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9242310717839844,
+            "ent_coef": 0.08111232272469865,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 9,
+        "value": 11.917542807690097,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9141981806022166,
+            "ent_coef": 0.046320577162340865,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 10,
+        "value": 12.353683660853216,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 256,
+            "n_steps": 4096,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.8240588477191415,
+            "ent_coef": 0.03351307801962623,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 11,
+        "value": 9.592694415481729,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9115213993861524,
+            "ent_coef": 0.01562780473869484,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 12,
+        "value": 12.426042593554762,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 4096,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.9077861844854055,
+            "ent_coef": 0.02984915732751763,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 13,
+        "value": 12.277785815571654,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8792530963049339,
+            "ent_coef": 0.054786623269973744,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 14,
+        "value": 12.695025966356958,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 4096,
+            "batch_size": 64,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8448772743462482,
+            "ent_coef": 0.09972571500898048,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 15,
+        "value": 12.364910134966346,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 64,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8460652216435821,
+            "ent_coef": 0.08686292295340184,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 16,
+        "value": 9.709324582961893,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9751971669127233,
+            "ent_coef": 0.04325918229584386,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 17,
+        "value": 10.852101097369223,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 16384,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8488321656774149,
+            "ent_coef": 0.03798196403764862,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 18,
+        "value": 10.503163619819265,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.0003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8195000201338954,
+            "ent_coef": 0.021730791823859976,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 19,
+        "value": 10.558397364434132,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 16384,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9401272696618468,
+            "ent_coef": 0.010496251373994082,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 20,
+        "value": 10.084092990701047,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8990399118264757,
+            "ent_coef": 0.05593440303590778,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 21,
+        "value": 11.734783244400075,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.977163347116508,
+            "ent_coef": 0.05789606335917901,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 22,
+        "value": 11.162321819908023,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.8448350086204641,
+            "ent_coef": 0.0724225843451468,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 23,
+        "value": 10.52328550112633,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.963584195540753,
+            "ent_coef": 0.08051671930169983,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 24,
+        "value": 10.93065685975996,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 4096,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.999,
+            "gae_lambda": 0.9340713091908286,
+            "ent_coef": 0.025675500362859507,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 25,
+        "value": 10.441969611173693,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 16384,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.99,
+            "gae_lambda": 0.9595527498575155,
+            "ent_coef": 0.019416952216401488,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 26,
+        "value": 10.093536156490973,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9514750979939214,
+            "ent_coef": 0.026945423361873774,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 27,
+        "value": 11.385648771603808,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.851130301498754,
+            "ent_coef": 0.05217919422477062,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 28,
+        "value": 9.547752846662,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.933003106158413,
+            "ent_coef": 0.05672947779190519,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 29,
+        "value": 10.36953375134869,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9386717300275939,
+            "ent_coef": 0.05921100139947164,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 30,
+        "value": 10.72024486388034,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9374066711683456,
+            "ent_coef": 0.05780063368980966,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 31,
+        "value": 10.479815733690906,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9447738186565984,
+            "ent_coef": 0.05367843798705124,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 32,
+        "value": 10.048900931515538,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9423162114940039,
+            "ent_coef": 0.06412733458685743,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 33,
+        "value": 9.917246070167781,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9380585262870277,
+            "ent_coef": 0.05871920299952129,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 34,
+        "value": 10.532831796619131,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9369183543788346,
+            "ent_coef": 0.06364618802891804,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 35,
+        "value": 10.45012393336057,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9361907172506532,
+            "ent_coef": 0.06763126239819182,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 36,
+        "value": 10.923211782313365,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.8715770614228223,
+            "ent_coef": 0.0636345398525432,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 37,
+        "value": 11.078743804936224,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.8721912409235414,
+            "ent_coef": 0.06583071507390803,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 38,
+        "value": 10.010992817704123,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.8647931851161281,
+            "ent_coef": 0.06291007859294415,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 39,
+        "value": 10.603770727768094,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.878888977052584,
+            "ent_coef": 0.06582050670196982,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 40,
+        "value": 10.201241475745793,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9363606753101703,
+            "ent_coef": 0.06354639368953686,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 41,
+        "value": 10.183245256310023,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9344309619798564,
+            "ent_coef": 0.06376774169403425,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 42,
+        "value": 9.594730429726848,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9213524081887677,
+            "ent_coef": 0.06532618063158332,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 43,
+        "value": 10.753978567155515,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9224250407686697,
+            "ent_coef": 0.06799356595054482,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 44,
+        "value": 10.241738496899098,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9179104284908486,
+            "ent_coef": 0.06553638501126385,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 45,
+        "value": 10.222413583161494,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9220383445538094,
+            "ent_coef": 0.06662867509278506,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 46,
+        "value": 11.3465347928725,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8716651367234968,
+            "ent_coef": 0.04327432545723672,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 47,
+        "value": 9.437494312638151,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8726906492576301,
+            "ent_coef": 0.04429657539113244,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 48,
+        "value": 11.33598122776709,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8907702498654907,
+            "ent_coef": 0.04493923491662008,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 49,
+        "value": 10.22383624531045,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8737367860339864,
+            "ent_coef": 0.04374845982050326,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 50,
+        "value": 10.539099990060175,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.870183557025715,
+            "ent_coef": 0.04256167639276141,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 51,
+        "value": 10.409201525128344,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 128,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8956443870373196,
+            "ent_coef": 0.044085863081606454,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 52,
+        "value": 10.355417566847475,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8957473997665496,
+            "ent_coef": 0.040682562216065116,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 53,
+        "value": 10.250437533639642,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8908925243571839,
+            "ent_coef": 0.04204351140468404,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 54,
+        "value": 10.538354819524093,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.892104926191948,
+            "ent_coef": 0.041514788522537774,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 55,
+        "value": 10.734874606631493,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8948734850064426,
+            "ent_coef": 0.04555803706094511,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 56,
+        "value": 10.198077129208622,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9223577353489822,
+            "ent_coef": 0.045747169405678384,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 57,
+        "value": 9.798505251371228,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9207235883253965,
+            "ent_coef": 0.044628275203054506,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 58,
+        "value": 10.489423556920881,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8944061316338255,
+            "ent_coef": 0.04523758048135584,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 59,
+        "value": 10.970312238231875,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8965981413191216,
+            "ent_coef": 0.04507873746721637,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 60,
+        "value": 10.373766467527899,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8990566935230195,
+            "ent_coef": 0.04287449045347283,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 61,
+        "value": 10.090860430979225,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 512,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8914745063551542,
+            "ent_coef": 0.041675444625869223,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 62,
+        "value": 10.974544469769821,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9695986371569516,
+            "ent_coef": 0.048101108018441724,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 63,
+        "value": 10.551913988341223,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8917212517992132,
+            "ent_coef": 0.047195351441406186,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 64,
+        "value": 10.027888802208372,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9057377553304043,
+            "ent_coef": 0.03949993023892315,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 65,
+        "value": 9.858755684766303,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.9042772697740732,
+            "ent_coef": 0.07402767118407645,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 66,
+        "value": 10.609227976900788,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 0.99,
+            "gae_lambda": 0.8997894748800397,
+            "ent_coef": 0.034992213375200705,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 67,
+        "value": 11.48402432618467,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.0003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9060390468523013,
+            "ent_coef": 0.03543539290760899,
+            "n_epochs": 5
+        },
+        "state": "1"
+    },
+    {
+        "number": 68,
+        "value": 10.714752710315379,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.906816388005426,
+            "ent_coef": 0.035195563733860596,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 69,
+        "value": 11.110275423862218,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 256,
+            "n_steps": 16384,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9009943912029287,
+            "ent_coef": 0.035481721109867054,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 70,
+        "value": 11.068786532120775,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9114083020038255,
+            "ent_coef": 0.034591469856776705,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 71,
+        "value": 10.772410220378893,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.904230243072218,
+            "ent_coef": 0.04949624630781691,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 72,
+        "value": 11.833446904937146,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9056388864319986,
+            "ent_coef": 0.033851269026063946,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 73,
+        "value": 9.78007190099669,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 128,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9059002703184926,
+            "ent_coef": 0.036499751323962104,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 74,
+        "value": 11.423841517569503,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9085745092194792,
+            "ent_coef": 0.03431183654391412,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 75,
+        "value": 11.134226761205799,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9067292005405476,
+            "ent_coef": 0.03411817180169067,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 76,
+        "value": 10.411425857085174,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9079392711421956,
+            "ent_coef": 0.002475036912922394,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 77,
+        "value": 10.403719161904435,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9086084445868061,
+            "ent_coef": 0.0361074411223963,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 78,
+        "value": 10.539224082391227,
+        "params": {
+            "n_layers": 1,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.906460969541172,
+            "ent_coef": 0.03416817178292116,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 79,
+        "value": 11.69694242270559,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.830119159634853,
+            "ent_coef": 0.03443429586322255,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 80,
+        "value": 10.817966946069733,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.9102567639946806,
+            "ent_coef": 0.03350693284299986,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 81,
+        "value": 11.492369682211086,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 1.0,
+            "gae_lambda": 0.8326756837888047,
+            "ent_coef": 0.035299040403615825,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 82,
+        "value": 10.278015426855786,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8333273016512512,
+            "ent_coef": 0.016499962575969453,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 83,
+        "value": 10.246392143860781,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.9284491119077123,
+            "ent_coef": 0.0035438806608030903,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 84,
+        "value": 11.76939351806311,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8330088535433234,
+            "ent_coef": 0.012864012728728941,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 85,
+        "value": 13.03523552073559,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8350403499255896,
+            "ent_coef": 0.014288989856219248,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 86,
+        "value": 10.885696120869738,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8832936236819426,
+            "ent_coef": 0.0752121791229917,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 87,
+        "value": 10.553078150129654,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.882094568891213,
+            "ent_coef": 0.07718267059191776,
+            "n_epochs": 10
+        },
+        "state": "1"
+    },
+    {
+        "number": 88,
+        "value": 11.108210255496019,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.8605095013033245,
+            "ent_coef": 0.0740608088301024,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 89,
+        "value": 10.83315227464048,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.8594039035250691,
+            "ent_coef": 0.074254740207349,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 90,
+        "value": 10.598573626183965,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 128,
+            "n_steps": 4096,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.9275853998125493,
+            "ent_coef": 0.011045541439886248,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 91,
+        "value": 10.78447861274035,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 256,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.859512429959297,
+            "ent_coef": 0.016242555770959063,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 92,
+        "value": 11.45126132144528,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 0.003,
+            "gamma": 0.999,
+            "gae_lambda": 0.884094602858009,
+            "ent_coef": 0.014966883258884484,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 93,
+        "value": 11.426537068865855,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.9463448338200536,
+            "ent_coef": 0.0516844536634443,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 94,
+        "value": 12.537152409975477,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.928438303873262,
+            "ent_coef": 0.0519812788641536,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 95,
+        "value": 11.714593882190936,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.9297077307715674,
+            "ent_coef": 0.029753767581165172,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 96,
+        "value": 10.67879863497167,
+        "params": {
+            "n_layers": 2,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 512,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.8838011139632929,
+            "ent_coef": 0.07559135685241287,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 97,
+        "value": 11.310705865671377,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9264670107556048,
+            "ent_coef": 0.07325518033262102,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 98,
+        "value": 10.434993217131009,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 0.999,
+            "gae_lambda": 0.9293230438530466,
+            "ent_coef": 0.0292588966696136,
+            "n_epochs": 20
+        },
+        "state": "1"
+    },
+    {
+        "number": 99,
+        "value": 10.889009593906493,
+        "params": {
+            "n_layers": 3,
+            "n_neurons": 64,
+            "n_steps": 8192,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "gamma": 1.0,
+            "gae_lambda": 0.9292139168992068,
+            "ent_coef": 0.07454613293076538,
+            "n_epochs": 20
+        },
+        "state": "1"
+    }
+]

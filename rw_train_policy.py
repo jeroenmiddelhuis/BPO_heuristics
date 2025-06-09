@@ -14,12 +14,12 @@ import sys
 optimal_hyperparameters = {
     'n_layers': 2,
     'n_neurons': 128,
-    'n_steps': 4096,
-    'batch_size': 64,
+    'n_steps': 16384,
+    'batch_size': 512,
     'learning_rate': 0.003,
-    'gamma': 0.999,
-    'gae_lambda': 0.8601744320443107,
-    'ent_coef': 0.03665671073131277,
+    'gamma': 1.0,
+    'gae_lambda': 0.8726906492576301,
+    'ent_coef': 0.04429657539113244,
     'n_epochs': 20
 }
     
@@ -51,7 +51,7 @@ def make_env(problem_name, nr_cases):
         raise Exception("Invalid problem name")
 
     # Initialize simulator and environment
-    simulator = Simulator(nr_cases=nr_cases, instance_file=instance_file, interarrival_rate_multiplier=interarrival_rate_multiplier)
+    simulator = Simulator(nr_cases=nr_cases, instance_file=instance_file, problem_name=problem_name, interarrival_rate_multiplier=interarrival_rate_multiplier)
     env = Environment(simulator)
     return env
 
@@ -70,7 +70,7 @@ def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, plot=False
     env = make_env(problem_name, nr_cases)
     
     # Create a separate environment for evaluation
-    eval_env = make_env(problem_name, nr_cases)
+    eval_env = make_env(problem_name, nr_cases=2500)
 
     # Create the model directory if it doesn't exist
     save_path = f"models/PPO/{problem_name}/{problem_name}_final"
@@ -111,8 +111,9 @@ def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, plot=False
     
     model.learn(
         total_timesteps=total_timesteps,
-        progress_bar=False
-    )#,        callback=eval_callback
+        progress_bar=False,
+        callback=eval_callback
+    )
     
     # Save the final model
     model.save(save_path)
@@ -156,8 +157,8 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     
     # Create DataFrame and save to CSV
     df = pd.DataFrame(data)
-    os.makedirs('data', exist_ok=True)
-    csv_path = f'data/{env.simulator.config_type}_action_count.csv'
+    os.makedirs('data_training/', exist_ok=True)
+    csv_path = f'data_training/{env.simulator.problem_name}_action_count.csv'
     df.to_csv(csv_path, index=False)
     print(f"Data saved to {csv_path}")
     
@@ -204,14 +205,14 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     
     plt.tight_layout()
     os.makedirs(os.path.dirname('figures/training'), exist_ok=True)
-    plt.savefig(f'figures/training/{env.simulator.config_type}_action_count.png')
+    plt.savefig(f'figures/training/{env.simulator.problem_name}_action_count.png')
     if show_plot:
         plt.show()
 
 def main():
     # Train the policy
-    problem_name = 'bpi2012'
-    model = train_policy(problem_name, nr_cases=1000, total_timesteps=5000000, plot=True)
+    problem_name = sys.argv[1] if len(sys.argv) > 1 else 'bpi2012'
+    model = train_policy(problem_name, nr_cases=1000, total_timesteps=10000000, plot=True)
     # 
 if __name__ == "__main__":
     main()

@@ -309,6 +309,7 @@ class Simulator:
                  report=False, 
                  problem=None, 
                  instance_file="BPI Challenge 2017 - instance.pickle",
+                 problem_name = "BPI Challenge 2017",
                  planner=None, 
                  record_total_cases=False, 
                  normalize_nodes_attrs=False, 
@@ -324,6 +325,7 @@ class Simulator:
         self.multi_agent = False
         self.deterministic_processing = deterministic_processing
 
+        self.problem_name = problem_name
         #flags to record problem characteristics
         self.record_total_cases = record_total_cases
         self.record_states = record_states
@@ -767,7 +769,7 @@ class Simulator:
 
     def reset(self):
         self.__init__(self.nr_cases, self.report,
-                      problem=self.problem)
+                      problem=self.problem, problem_name=self.problem_name)
         # Reset action tracking but keep the episode count and stats history
 
     def available_assignments(self):

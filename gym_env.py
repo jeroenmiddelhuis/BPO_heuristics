@@ -1,6 +1,11 @@
 from gymnasium import spaces, Env
 import numpy as np
-from heuristics import random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy
+
+from heuristics import random_policy, spt_policy, fifo_policy
+from heuristics import hrrn_policy, longest_queue_policy, shortest_queue_policy
+from heuristics import least_flexible_resource_policy, most_flexible_resource_policy
+from heuristics import least_flexible_activity_policy, most_flexible_activity_policy
+
 class Environment(Env):
     def __init__(self, simulator) -> None:
         super().__init__()
@@ -8,7 +13,11 @@ class Environment(Env):
         
         # Define action and observation spaces
         self.assignments = self.simulator.assignments
-        self.actions = [spt_policy, fifo_policy, random_policy, "postpone"]
+        #self.actions = [spt_policy, fifo_policy, random_policy]
+        self.actions = [spt_policy, fifo_policy,
+                        hrrn_policy, longest_queue_policy, shortest_queue_policy,
+                        least_flexible_resource_policy, most_flexible_resource_policy,
+                        least_flexible_activity_policy, most_flexible_activity_policy]
         self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
         self.total_reward = 0
         
@@ -56,23 +65,23 @@ class Environment(Env):
         """Execute one step in the environment."""        
         # The action is an integer and should be converted to a (resource, task) assignment
         if isinstance(action, (int, np.integer)):
-            if action == len(self.actions) - 1:
-                # Handle postpone action
-                self.track_actions["postpone"] += 1
-                self.simulator.postpone()
-            else:
-                # Convert integer action to resource-task assignment
-                heuristic = self.actions[action]
-                heuristic_name = heuristic.__name__ if callable(heuristic) else heuristic
-                if heuristic_name in self.track_actions:
-                    self.track_actions[heuristic_name] += 1
+            # if action == len(self.actions) - 1:
+            #     # Handle postpone action
+            #     self.track_actions["postpone"] += 1
+            #     self.simulator.postpone()
+            # else:
+            # Convert integer action to resource-task assignment
+            heuristic = self.actions[action]
+            heuristic_name = heuristic.__name__ if callable(heuristic) else heuristic
+            if heuristic_name in self.track_actions:
+                self.track_actions[heuristic_name] += 1
 
-                assignment = heuristic(self.simulator)
-                
-                if assignment:
-                    resource, task = assignment
-                    # Process the action in simulator  
-                    self.simulator.process_assignment(resource, task)
+            assignment = heuristic(self.simulator)
+            
+            if assignment:
+                resource, task = assignment
+                # Process the action in simulator  
+                self.simulator.process_assignment(resource, task)
 
         else:
             # Use the tuple directly as the assignment
@@ -116,7 +125,8 @@ class Environment(Env):
         pass
 
     def action_masks(self):
-        assignment_masks = self.simulator.get_assignment_masks()
+        #assignment_masks = self.simulator.get_assignment_masks()
+        return np.array([1.0] * len(self.actions), dtype=np.float64)
         if sum(assignment_masks) == 0:
             heuristic_mask = np.array([0.0] * (len(self.actions) - 1), dtype=np.float64)
         else:
@@ -128,7 +138,7 @@ class Environment(Env):
             postpone_possible = np.array([0.0], dtype=np.float64)
         #postpone_possible = np.array([1.0], dtype=np.float64) if sum(heuristic_mask) == 0 else np.array([0.0], dtype=np.float64)
 
-        return np.concatenate([heuristic_mask, postpone_possible])
+        return np.concatenate([heuristic_mask])
 
     def close(self):
         # Clean up resources

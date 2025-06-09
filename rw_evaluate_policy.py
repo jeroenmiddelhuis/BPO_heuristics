@@ -130,9 +130,13 @@ def evaluate(problem_name, policy, nr_cases, nr_episodes, write_to_file=False):
 
 if __name__ == "__main__":
     # bpi2017, bpi2012, consulta, production, microsoft
-    for problem_name in ['consulta']:
-        for policy in [spt_policy]:
-            results = evaluate(problem_name, policy, nr_cases=2500, nr_episodes=100, write_to_file=False)
+    for problem_name in ['bpi2012']:
+        # for policy in [spt_policy, fifo_policy, random_policy, hrrn_policy,
+        #                longest_queue_policy, shortest_queue_policy,
+        #                least_flexible_resource_policy, most_flexible_resource_policy,
+        #                least_flexible_activity_policy, most_flexible_activity_policy]:
+        for policy in [random_policy]:
+            results = evaluate(problem_name, policy, nr_cases=2500, nr_episodes=300, write_to_file=True)
 
             print(f"Policy: {policy.__name__}, Problem: {problem_name}")
             print(f"Avg Cycle Time (1000 cases): {results['avg_cycle_time']:.2f}")
