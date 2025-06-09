@@ -6,17 +6,22 @@ from rw_heuristics import least_flexible_resource_policy, most_flexible_resource
 from rw_heuristics import least_flexible_activity_policy, most_flexible_activity_policy
 
 class Environment(Env):
-    def __init__(self, simulator) -> None:
+    def __init__(self, simulator, action_setup="heuristics") -> None:
         super().__init__()
         self.simulator = simulator
-        
+        self.action_setup = action_setup
         # Define action and observation spaces
         self.assignments = self.simulator.assignments
-        self.actions = [spt_policy, fifo_policy,
-                        hrrn_policy, longest_queue_policy, shortest_queue_policy,
-                        least_flexible_resource_policy, most_flexible_resource_policy,
-                        least_flexible_activity_policy, most_flexible_activity_policy]
-        self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
+        if self.action_setup == "heuristics":
+            self.actions = [spt_policy, fifo_policy,
+                            hrrn_policy, longest_queue_policy, shortest_queue_policy,
+                            least_flexible_resource_policy, most_flexible_resource_policy,
+                            least_flexible_activity_policy, most_flexible_activity_policy]
+            self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
+        else:
+            self.actions = self.assignments
+            self.track_actions = {}
+        
         self.total_reward = 0
         
         # Add tracking for episode stats
@@ -50,7 +55,8 @@ class Environment(Env):
         
         self.simulator.reset()
         # Reset action tracking but keep the episode count and stats history
-        self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
+        if self.action_setup == "heuristics":
+            self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
         self.total_reward = 0
         self.episode_count += 1
         
@@ -70,11 +76,17 @@ class Environment(Env):
             # else:
             # Convert integer action to resource-task assignment
             heuristic = self.actions[action]
-            heuristic_name = heuristic.__name__ if callable(heuristic) else heuristic
-            if heuristic_name in self.track_actions:
+            if self.action_setup == "heuristics":
+                heuristic_name = heuristic.__name__ if callable(heuristic) else heuristic
                 self.track_actions[heuristic_name] += 1
 
-            assignment = heuristic(self.simulator)
+                assignment = heuristic(self.simulator)
+            else: # Used for replicating the approach by Middelhuis et al. (2025)/Meneghello et al. (2024)
+                # If using assignments directly, convert action to assignment
+                assignment = self.assignments[action]
+                resource, task_type = assignment
+                resource, task = self.simulator.resource_to_task_type_assignment(resource, task_type)
+                assignment = (resource, task)
             
             if assignment:
                 resource, task = assignment
@@ -126,8 +138,15 @@ class Environment(Env):
 
     def action_masks(self):
         """For now we only use heuristics as actions, so all actions are available."""
-        heuristic_mask = np.array([1.0] * len(self.actions), dtype=np.float64)
-        return heuristic_mask
+        if self.action_setup == "heuristics":
+            # Create a mask where all heuristic actions are available
+            mask = np.array([1.0] * len(self.actions), dtype=np.float64)
+        else: # When using assignments directly
+            mask = np.zeros(len(self.assignments), dtype=np.float64)
+            for i, (resource, task_type) in enumerate(self.assignments):
+                if resource in self.simulator.available_resources and len(self.simulator.unassigned_tasks_per_type[task_type]) > 0:
+                    mask[i] = 1.0
+        return mask
 
     def close(self):
         # Clean up resources

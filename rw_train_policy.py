@@ -10,20 +10,8 @@ from stable_baselines3.common.callbacks import CheckpointCallback
 import pandas as pd
 from callbacks import PPOEvalCallback
 import sys
-
-optimal_hyperparameters = {
-    'n_layers': 2,
-    'n_neurons': 128,
-    'n_steps': 16384,
-    'batch_size': 512,
-    'learning_rate': 0.003,
-    'gamma': 1.0,
-    'gae_lambda': 0.8726906492576301,
-    'ent_coef': 0.04429657539113244,
-    'n_epochs': 20
-}
     
-def make_env(problem_name, nr_cases):
+def make_env(problem_name, nr_cases, action_setup="heuristics"):
     """Create and initialize the environment"""
     if problem_name == 'toloka':
         instance_file = "./data/toloka_problem.pkl"
@@ -51,11 +39,59 @@ def make_env(problem_name, nr_cases):
         raise Exception("Invalid problem name")
 
     # Initialize simulator and environment
-    simulator = Simulator(nr_cases=nr_cases, instance_file=instance_file, problem_name=problem_name, interarrival_rate_multiplier=interarrival_rate_multiplier)
-    env = Environment(simulator)
+    if action_setup == "heuristics":
+        simulator = Simulator(nr_cases=nr_cases, 
+                              instance_file=instance_file, 
+                              problem_name=problem_name, 
+                              interarrival_rate_multiplier=interarrival_rate_multiplier)
+        env = Environment(simulator)
+    else:
+        simulator = Simulator(nr_cases=nr_cases, 
+                              instance_file=instance_file, 
+                              problem_name=problem_name, 
+                              interarrival_rate_multiplier=interarrival_rate_multiplier, 
+                              reward_function="cycle_time")
+        env = Environment(simulator, 
+                          action_setup=action_setup)
     return env
 
-def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, plot=False):
+def get_optimal_hyperparameters(action_setup="heuristics"):
+    """
+    Get the optimal hyperparameters for the MaskablePPO model.
+    
+    Args:
+        action_setup: The action setup to use (default is "heuristics")
+    
+    Returns:
+        A dictionary of optimal hyperparameters
+    """
+    if action_setup == "heuristics":
+        return {
+            'n_layers': 2,
+            'n_neurons': 128,
+            'n_steps': 16384,
+            'batch_size': 512,
+            'learning_rate': 0.003,
+            'gamma': 1.0,
+            'gae_lambda': 0.8726906492576301,
+            'ent_coef': 0.04429657539113244,
+            'n_epochs': 20
+        }
+    else:
+        return {
+            'n_layers': 2,
+            'n_neurons': 128,
+            'n_steps': 25600,
+            'batch_size': 256,
+            'learning_rate': 3e-05,
+            'gamma': 0.999,
+            'gae_lambda': 0.8726906492576301,
+            'ent_coef': 0.04429657539113244,
+            'n_epochs': 20
+        }
+
+
+def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, action_setup="heuristics", plot=False):
     """
     Train a MaskablePPO policy
     
@@ -67,14 +103,18 @@ def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, plot=False
     """
     print(f"Training policy for {problem_name} with {nr_cases} cases for {total_timesteps} timesteps")
     # Create the environment
-    env = make_env(problem_name, nr_cases)
+    env = make_env(problem_name, nr_cases, action_setup)
     
     # Create a separate environment for evaluation
-    eval_env = make_env(problem_name, nr_cases=2500)
+    eval_env = make_env(problem_name, nr_cases=2500, action_setup=action_setup)
 
-    # Create the model directory if it doesn't exist
-    save_path = f"models/PPO/{problem_name}/{problem_name}_final"
-    best_model_path = f"models/PPO/{problem_name}/{problem_name}_best"
+    if action_setup == "assignments":
+        save_path = f"models/PPO_assignments/{problem_name}/{problem_name}_final"
+        best_model_path = f"models/PPO_assignments/{problem_name}/{problem_name}_best"
+    else:
+        # Create the model directory if it doesn't exist
+        save_path = f"models/PPO/{problem_name}/{problem_name}_final"
+        best_model_path = f"models/PPO/{problem_name}/{problem_name}_best"
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
     # Setup evaluation callback - evaluate every 10 updates
@@ -85,6 +125,7 @@ def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, plot=False
         best_model_path=best_model_path,
         verbose=1
     )
+    optimal_hyperparameters = get_optimal_hyperparameters(action_setup)
 
     # Build net_arch
     net_arch = dict(
@@ -120,11 +161,12 @@ def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, plot=False
     print(f"Model saved to {save_path}")
     
     # Save evaluation results to CSV
-    eval_callback.save_eval_results(problem_name)
+    if action_setup == "heuristics":
+        eval_callback.save_eval_results(problem_name)
     
-    # Generate plot if requested
-    if plot:
-        plot_policy_usage_and_cycle_time(env, show_plot=False)
+        # Generate plot if requested
+        if plot:
+            plot_policy_usage_and_cycle_time(env, show_plot=False)
     
     return model
 
@@ -212,7 +254,8 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
 def main():
     # Train the policy
     problem_name = sys.argv[1] if len(sys.argv) > 1 else 'bpi2012'
-    model = train_policy(problem_name, nr_cases=1000, total_timesteps=10000000, plot=True)
+    action_setup = 'assignments'
+    model = train_policy(problem_name, nr_cases=1000, total_timesteps=1000, action_setup=action_setup, plot=True)
     # 
 if __name__ == "__main__":
     main()

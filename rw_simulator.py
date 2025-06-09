@@ -310,6 +310,7 @@ class Simulator:
                  problem=None, 
                  instance_file="BPI Challenge 2017 - instance.pickle",
                  problem_name = "BPI Challenge 2017",
+                 reward_function= "AUC",
                  planner=None, 
                  record_total_cases=False, 
                  normalize_nodes_attrs=False, 
@@ -326,6 +327,7 @@ class Simulator:
         self.deterministic_processing = deterministic_processing
 
         self.problem_name = problem_name
+        self.reward_function = reward_function
         #flags to record problem characteristics
         self.record_total_cases = record_total_cases
         self.record_states = record_states
@@ -643,6 +645,8 @@ class Simulator:
             elif event.event_type == EventType.COMPLETE_CASE:
                 self.total_cycle_time += self.now - self.case_start_times[event.task.case_id]
                 self.case_cycle_times[event.task.case_id] = self.now - self.case_start_times[event.task.case_id]
+                if self.reward_function == "cycle_time":
+                    self.reward += 1 / (1 + self.now - self.case_start_times[event.task.case_id])
                 self.n_finalized_cases += 1
                 self.finalized_cases.append(event.task.case_id)
 
@@ -652,8 +656,8 @@ class Simulator:
         if self.status == "FINISHED":
             self.update_rewards()
             
-            # Print average queue lengths at the end
-            #self.print_average_queue_lengths()
+            # # Print average queue lengths at the end
+            # self.print_average_queue_lengths()
 
             # if self.n_finalized_cases:
             #     print(
@@ -762,14 +766,16 @@ class Simulator:
                 f.write(f"{self.total_cases_dict['time'][i]} {self.total_cases_dict['total_cases'][i]}\n")
 
     def update_rewards(self):
-        self.reward -= (self.now - self.last_event_time) * (
-                len(self.assigned_tasks) + len(self.unassigned_tasks))
-        self.total_reward += self.reward
-        self.last_event_time = self.now
+        if self.reward_function == "AUC":
+            self.reward -= (self.now - self.last_event_time) * (
+                    len(self.assigned_tasks) + len(self.unassigned_tasks))
+            self.total_reward += self.reward
+            self.last_event_time = self.now
 
     def reset(self):
         self.__init__(self.nr_cases, self.report,
-                      problem=self.problem, problem_name=self.problem_name)
+                      problem=self.problem, problem_name=self.problem_name,
+                      reward_function=self.reward_function)
         # Reset action tracking but keep the episode count and stats history
 
     def available_assignments(self):
