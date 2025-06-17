@@ -21,7 +21,7 @@ class Environment(Env):
             #                 hrrn_policy, longest_queue_policy, shortest_queue_policy]
             self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
         else:
-            self.actions = self.assignments + ["postpone"]
+            self.actions = self.assignments
             self.track_actions = {}
         
         self.total_reward = 0
@@ -154,7 +154,7 @@ class Environment(Env):
                 for resource, task_type in self.assignments
             ], dtype=np.float64)
             # Add a 1.0 at the end of the array for the "postpone" action
-            mask = np.concatenate([mask, np.array([1.0], dtype=np.float64)])
+            # mask = np.concatenate([mask, np.array([1.0], dtype=np.float64)])
         return mask
 
     def close(self):

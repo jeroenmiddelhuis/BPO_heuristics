@@ -81,9 +81,9 @@ def get_optimal_hyperparameters(action_setup="heuristics"):
         return {
             'n_layers': 2,
             'n_neurons': 128,
-            'n_steps': 25600,
-            'batch_size': 256,
-            'learning_rate': 3e-05,
+            'n_steps': 16384,
+            'batch_size': 512,
+            'learning_rate': 0.0003,
             'gamma': 0.999,
             'gae_lambda': 0.8726906492576301,
             'ent_coef': 0.04429657539113244,
@@ -254,7 +254,7 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
 def main():
     # Train the policy
     problem_name = sys.argv[1] if len(sys.argv) > 1 else 'bpi2017'
-    action_setup = 'heuristics'
+    action_setup = 'assignments'
     model = train_policy(problem_name, nr_cases=1000, total_timesteps=10000000, action_setup=action_setup, plot=True)
     # 
 if __name__ == "__main__":

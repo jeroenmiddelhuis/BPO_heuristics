@@ -657,7 +657,7 @@ class Simulator:
             self.update_rewards()
             
             # # Print average queue lengths at the end
-            self.print_average_queue_lengths()
+            #self.print_average_queue_lengths()
 
             if self.n_finalized_cases:
                 print(

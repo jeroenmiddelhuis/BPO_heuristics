@@ -1,7 +1,5 @@
 tensorboard_logs
 __pycache__
 *.pyc
-figures
 data
-results
 models
