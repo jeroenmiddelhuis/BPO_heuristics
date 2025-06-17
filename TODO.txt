@@ -1,36 +1,23 @@
-https://chatgpt.com/share/6830ec6d-2d64-8009-95ec-6f9c47e58548
-
-
-Heuristics to implemment:
-
-2. Least Flexible Resource (LFR) First
-* Rationale: Prioritize assigning the resource with the fewest compatible activities first.
-* Usefulness: Maximizes long-term flexibility by reserving versatile resources for future unknown demands.
-* Suitability: Ideal for maintaining operational flexibility under uncertainty.
-* Cycle-Time Impact: Ensures that specialized resources are utilized efficiently, reducing likelihood of bottlenecks due to unavailable specialized resources later on.
-
-3. Most Flexible Activity (MFA) First
-* Rationale: Assign activities that can be handled by the largest subset of idle resources first.
-* Usefulness: Quickly clears broadly compatible activities, preserving specialized resources.
-* Suitability: Effective when there is frequent arrival of diverse activities.
-
-2. Earliest Start Activity First (Immediate Activity Prioritization)
-* Logic: Assign idle resources to activities of cases currently earliest in their journey (i.e., activities at early positions in the sequence).
-* Cycle-Time Impact: Moves cases rapidly through their early stages, preventing early-stage bottlenecks that can increase overall cycle times.
-
-Fewest Eligible Resources First (FERF)
+Questions:
+-Include figures of scenarios
+-Change the set of allowed heuristics for the scenarios (LFRF, MFRF, LFAF, MFAF are the same as SPT)
+-5.4 reward: how should we give the formula? We only transition when we can make an assignment. So the reward =/= -C(t'-t)
+-Add reference for each event log?
 
 
 
-Recommended Practical Strategy (Hybrid Approach):
-Given the complexity and uncertainty of your online resource allocation problem, a combination of heuristics is typically more effective than single-rule dispatching:
 
-Primary heuristic:
 
-Shortest Estimated Remaining Cycle Time (SERCT) or Minimum Remaining Activities (MRA) (for aggressively pushing cases to completion quickly).
+PPO_mid included, best policies:
+-BPI2012: PPO_mid, PPO, SPT
+-BPI2017: PPO_mid
+-microsoft: PPO_mid
+-production: PPO_mid, SPT
+-Consulta: PPO_mid, PPO 
 
-Secondary heuristic (tie-breaker):
-
-Least Flexible Resource (LFR) or Fewest Eligible Resources First (FERF) (for preserving flexibility and addressing resource scarcity proactively).
-
-This hybrid combination balances short-term speed with longer-term flexibility, minimizing cycle times in an unpredictable online environment.
+PPO_mid excluded, best policies:
+-BPI2012: PPO, SPT
+-BPI2017: PPO, SPT, HRRN
+-microsoft: PPO
+-production: PPO, SPT
+-Consulta: PPO

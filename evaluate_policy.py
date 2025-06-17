@@ -54,7 +54,7 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
 
     cycle_times = []
     track_actions = []
-    policies = [spt_policy, fifo_policy, random_policy, "postpone"]
+    policies = env.actions
 
     for _ in range(nr_episodes):
         # Main interaction loop
@@ -80,18 +80,26 @@ def evaluate_ppo(config, nr_cases, nr_episodes):
     os.makedirs(results_dir, exist_ok=True)
     results_file = f'{results_dir}/{config}_ppo.txt'
     with open(results_file, 'w') as f:
-        f.write("cycle_time,spt_policy,fifo_policy,random_policy,postpone\n")
+        # Write header
+        header = "cycle_time"
+        for policy in policies:
+            header += f",{policy.__name__}"
+        f.write(header + "\n")
+        # Write data
         for i, cycle_time in enumerate(cycle_times):
-            f.write(f"{cycle_time},{track_actions[i]["spt_policy"]},{track_actions[i]["fifo_policy"]},{track_actions[i]["random_policy"]},{track_actions[i]["postpone"]}\n")
+            line = f"{cycle_time}"
+            for policy in policies:
+                line += f",{track_actions[i][policy.__name__]}"
+            f.write(line + "\n")
 
 
 if __name__ == "__main__":
     # ['slow_server', 'parallel', 'low_utilization', 'high_utilization', 'down_stream', 'n_system', 'parallel_xor']:
-    for config_type in ['n_system']:
+    for config_type in ['slow_server', 'parallel', 'low_utilization']:
         # Evaluate PPO policy
         # evaluate_ppo(config_type, nr_cases=2500, nr_episodes=300)
         
 
-        #[random_policy, spt_policy, fifo_policy, shortest_queue_policy, longest_queue_policy]
-        for policy in [least_flexible_resource_policy]:
-            evaluate(config_type, policy, nr_cases=2500, nr_episodes=30)
+        
+        for policy in [hrrn_policy, shortest_queue_policy, longest_queue_policy]:
+            evaluate(config_type, policy, nr_cases=2500, nr_episodes=300)

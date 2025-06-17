@@ -105,7 +105,7 @@ class Resource:
         self.assigned_task = None
 
 class Simulator:
-    def __init__(self, config_type, nr_cases, reward_function="cycle_time", print_results=False):
+    def __init__(self, config_type, nr_cases, reward_function="AUC", print_results=False):
         self.config_type = config_type
         self.nr_cases = nr_cases
         self.reward_function = reward_function

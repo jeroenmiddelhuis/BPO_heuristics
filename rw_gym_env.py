@@ -17,9 +17,11 @@ class Environment(Env):
                             hrrn_policy, longest_queue_policy, shortest_queue_policy,
                             least_flexible_resource_policy, most_flexible_resource_policy,
                             least_flexible_activity_policy, most_flexible_activity_policy]
+            # self.actions = [spt_policy, fifo_policy,
+            #                 hrrn_policy, longest_queue_policy, shortest_queue_policy]
             self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
         else:
-            self.actions = self.assignments
+            self.actions = self.assignments + ["postpone"]
             self.track_actions = {}
         
         self.total_reward = 0
@@ -83,6 +85,11 @@ class Environment(Env):
                 assignment = heuristic(self.simulator)
             else: # Used for replicating the approach by Middelhuis et al. (2025)/Meneghello et al. (2024)
                 # If using assignments directly, convert action to assignment
+                if action == len(self.actions) - 1: # Postpone action
+                    # Handle postpone action
+                    self.simulator.run_until_next_decision_epoch()
+                    return self.observation(), self.get_reward(), self.is_done(), False, {}  # False for truncated parameter
+
                 assignment = self.assignments[action]
                 resource, task_type = assignment
                 resource, task = self.simulator.resource_to_task_type_assignment(resource, task_type)
@@ -103,9 +110,7 @@ class Environment(Env):
         # Run simulation until next decision point or completion
         self.simulator.run_until_next_decision_epoch()
 
-        # Additional info
-        info = {}
-        return self.observation(), self.get_reward(), self.is_done(), False, info  # False for truncated parameter
+        return self.observation(), self.get_reward(), self.is_done(), False, {}  # False for truncated parameter
 
     def observation(self):
         # Resource features - add debug prints
@@ -142,10 +147,14 @@ class Environment(Env):
             # Create a mask where all heuristic actions are available
             mask = np.array([1.0] * len(self.actions), dtype=np.float64)
         else: # When using assignments directly
-            mask = np.zeros(len(self.assignments), dtype=np.float64)
-            for i, (resource, task_type) in enumerate(self.assignments):
-                if resource in self.simulator.available_resources and len(self.simulator.unassigned_tasks_per_type[task_type]) > 0:
-                    mask[i] = 1.0
+            available_resources = set(self.simulator.available_resources)
+            unassigned_tasks = self.simulator.unassigned_tasks_per_type
+            mask = np.array([
+                1.0 if resource in available_resources and len(unassigned_tasks[task_type]) > 0 else 0.0
+                for resource, task_type in self.assignments
+            ], dtype=np.float64)
+            # Add a 1.0 at the end of the array for the "postpone" action
+            mask = np.concatenate([mask, np.array([1.0], dtype=np.float64)])
         return mask
 
     def close(self):

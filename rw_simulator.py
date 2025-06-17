@@ -228,12 +228,11 @@ class MinedProblem(Problem):
         # if deterministic_processing:
         #return mu
 
-        # We do not allow negative values for processing time.
         # Expovariate
         return random.expovariate(1 / mu)
 
-
         # Gaussian
+        # We do not allow negative values for processing time.
         pt = random.gauss(mu, sigma)
         while pt < 0:
             pt = random.gauss(mu, sigma)
@@ -359,6 +358,7 @@ class Simulator:
 
         self.observation_time = 0
         self.observation_time_old = 0
+        self.last_queue_record_time = 0
         
         if problem is None:
             self.problem = MinedProblem.from_file(instance_file)
@@ -635,10 +635,10 @@ class Simulator:
 
             # if e is a planning event: do assignment
             elif event.event_type == EventType.PLAN_TASKS:
-                # Increment step counter and record queue lengths every 100 steps
-                self.step_counter += 1
-                if self.step_counter % 10 == 0:
+                # Record queue lengths every time self.now advances to a new integer time unit (e.g., every 1.0)
+                if int(self.now // 1) != int(getattr(self, 'last_queue_record_time', -1)):
                     self.record_queue_lengths()
+                    self.last_queue_record_time = int(self.now // 1)
                 return True
 
             # if e is a complete case event: add to the number of completed cases
@@ -657,16 +657,16 @@ class Simulator:
             self.update_rewards()
             
             # # Print average queue lengths at the end
-            # self.print_average_queue_lengths()
+            self.print_average_queue_lengths()
 
-            # if self.n_finalized_cases:
-            #     print(
-            #         f"Episode completed. Average cycle time was {self.total_cycle_time / self.n_finalized_cases}")
-            #     #print(f"Time as a function of reward: {self.total_reward / self.n_finalized_cases}")
-            #     return self.total_cycle_time / self.n_finalized_cases
-            # else:
-            #     print(f"COMPLETED: you completed a full year of simulated customer cases. No cases completed.")
-            #     return 0
+            if self.n_finalized_cases:
+                print(
+                    f"Episode completed. Average cycle time was {self.total_cycle_time / self.n_finalized_cases}")
+                #print(f"Time as a function of reward: {self.total_reward / self.n_finalized_cases}")
+                return self.total_cycle_time / self.n_finalized_cases
+            else:
+                print(f"COMPLETED: you completed a full year of simulated customer cases. No cases completed.")
+                return 0
 
     def process_assignment(self, resource, task):
 
@@ -815,8 +815,8 @@ class Simulator:
         # Print the average number of tasks in the complete system
         total_samples = len(next(iter(self.queue_lengths.values())))
         total_tasks_per_sample = [sum(self.queue_lengths[task_type][i] for task_type in self.task_types) for i in range(total_samples)]
-        avg_total_tasks = sum(total_tasks_per_sample) / total_samples
-        print(f"\nAverage number of tasks in the complete system: {avg_total_tasks:.2f} (max: {max(total_tasks_per_sample)})")
+        self.avg_total_tasks = sum(total_tasks_per_sample) / total_samples
+        print(f"\nAverage number of tasks in the complete system: {self.avg_total_tasks:.2f} (max: {max(total_tasks_per_sample)})")
 
 
 

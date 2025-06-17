@@ -39,7 +39,8 @@ class PPOEvalCallback(BaseCallback):
         # Add storage for evaluation history
         self.eval_history = {
             'timesteps': [],
-            'mean_cycle_time': []
+            'mean_cycle_time': [],
+            'track_actions': []
         }
         
     def _init_callback(self):
@@ -101,6 +102,7 @@ class PPOEvalCallback(BaseCallback):
             # Record evaluation results
             self.eval_history['timesteps'].append(self.num_timesteps)
             self.eval_history['mean_cycle_time'].append(mean_cycle_time)
+            self.eval_history['track_actions'].append(self.eval_env.track_actions.copy())
             
             if self.verbose > 0:
                 print(f"Mean cycle time over {self.n_eval_episodes} episodes: {mean_cycle_time:.2f}")
@@ -127,12 +129,24 @@ class PPOEvalCallback(BaseCallback):
             print("No evaluation results to save.")
             return
             
-        # Create DataFrame
-        df = pd.DataFrame(self.eval_history)
+        # Create base DataFrame
+        df = pd.DataFrame({
+            'timesteps': self.eval_history['timesteps'],
+            'mean_cycle_time': self.eval_history['mean_cycle_time']
+        })
+        
+        # Process track_actions to add each action as a separate column
+        if self.eval_history['track_actions']:
+            # Get all possible action keys from the first entry
+            action_keys = list(self.eval_history['track_actions'][0].keys())
+            
+            # Create columns for each action
+            for action_key in action_keys:
+                df[f'{action_key}'] = [actions[action_key] for actions in self.eval_history['track_actions']]
         
         # Save to CSV
-        os.makedirs('data', exist_ok=True)
-        csv_path = f'data/{config_type}_eval_results.csv'
+        os.makedirs('data_training', exist_ok=True)
+        csv_path = f'data_training/{config_type}_mid_eval_results.csv'
         df.to_csv(csv_path, index=False)
         print(f"Evaluation results saved to {csv_path}")
 

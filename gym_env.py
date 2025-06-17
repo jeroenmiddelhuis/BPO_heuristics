@@ -18,6 +18,8 @@ class Environment(Env):
                         hrrn_policy, longest_queue_policy, shortest_queue_policy,
                         least_flexible_resource_policy, most_flexible_resource_policy,
                         least_flexible_activity_policy, most_flexible_activity_policy]
+        # self.actions = [spt_policy, fifo_policy,
+        #                 hrrn_policy, longest_queue_policy, shortest_queue_policy]
         self.track_actions = {policy.__name__ if callable(policy) else policy: 0 for policy in self.actions}
         self.total_reward = 0
         

@@ -16,7 +16,7 @@ optimal_hyperparameters = {
     'n_neurons': 128,
     'n_steps': 16384,
     'batch_size': 512,
-    'learning_rate': 0.003,
+    'learning_rate': 0.0003,
     'gamma': 1.0,
     'gae_lambda': 0.8726906492576301,
     'ent_coef': 0.04429657539113244,
@@ -47,8 +47,8 @@ def train_policy(config_type, nr_cases=2500, total_timesteps=100000, reward_func
     eval_env = make_env(config_type, nr_cases, reward_function, print_results=True)
 
     # Create the model directory if it doesn't exist
-    save_path = f"models/PPO/{config_type}/{config_type}_final"
-    best_model_path = f"models/PPO/{config_type}/{config_type}_best"
+    save_path = f"models/PPO/{config_type}_mid/{config_type}_final"
+    best_model_path = f"models/PPO/{config_type}_mid/{config_type}_best"
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
     # Setup evaluation callback - evaluate every 10 updates
@@ -132,7 +132,7 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     # Create DataFrame and save to CSV
     df = pd.DataFrame(data)
     os.makedirs('data_training', exist_ok=True)
-    csv_path = f'data_training/{env.simulator.config_type}_action_count.csv'
+    csv_path = f'data_training/{env.simulator.config_type}_mid_action_count.csv'
     df.to_csv(csv_path, index=False)
     print(f"Data saved to {csv_path}")
     
@@ -179,7 +179,7 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     
     plt.tight_layout()
     os.makedirs(os.path.dirname('figures/training'), exist_ok=True)
-    plt.savefig(f'figures/training/{env.simulator.config_type}_action_count.png')
+    plt.savefig(f'figures/training/{env.simulator.config_type}_mid_action_count.png')
     if show_plot:
         plt.show()
 

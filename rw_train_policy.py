@@ -22,19 +22,19 @@ def make_env(problem_name, nr_cases, action_setup="heuristics"):
         interarrival_rate_multiplier = 1
     elif problem_name == 'bpi2012':
         instance_file = "./data/bpi2012_problem.pkl"
-        interarrival_rate_multiplier = 1
+        interarrival_rate_multiplier = 1.2
     elif problem_name == 'bpi2018':
         instance_file = "./data/bpi2018_problem.pkl"
         interarrival_rate_multiplier = 0.6
     elif problem_name == 'consulta':
         instance_file = "./data/consulta.pkl"
-        interarrival_rate_multiplier = 2.3
+        interarrival_rate_multiplier = 2.5
     elif problem_name == 'production':
         instance_file = "data/production.pkl"
-        interarrival_rate_multiplier = 1.8
+        interarrival_rate_multiplier = 2
     elif problem_name == 'microsoft':
         instance_file = "data/microsoft.pkl"
-        interarrival_rate_multiplier = 1.1
+        interarrival_rate_multiplier = 1.3
     else:
         raise Exception("Invalid problem name")
 
@@ -71,7 +71,7 @@ def get_optimal_hyperparameters(action_setup="heuristics"):
             'n_neurons': 128,
             'n_steps': 16384,
             'batch_size': 512,
-            'learning_rate': 0.003,
+            'learning_rate': 0.0003,
             'gamma': 1.0,
             'gae_lambda': 0.8726906492576301,
             'ent_coef': 0.04429657539113244,
@@ -113,8 +113,8 @@ def train_policy(problem_name, nr_cases=2500, total_timesteps=100000, action_set
         best_model_path = f"models/PPO_assignments/{problem_name}/{problem_name}_best"
     else:
         # Create the model directory if it doesn't exist
-        save_path = f"models/PPO/{problem_name}/{problem_name}_final"
-        best_model_path = f"models/PPO/{problem_name}/{problem_name}_best"
+        save_path = f"models/PPO/{problem_name}_mid/{problem_name}_final"
+        best_model_path = f"models/PPO/{problem_name}_mid/{problem_name}_best"
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
     # Setup evaluation callback - evaluate every 10 updates
@@ -200,7 +200,7 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     # Create DataFrame and save to CSV
     df = pd.DataFrame(data)
     os.makedirs('data_training/', exist_ok=True)
-    csv_path = f'data_training/{env.simulator.problem_name}_action_count.csv'
+    csv_path = f'data_training/{env.simulator.problem_name}_mid_action_count.csv'
     df.to_csv(csv_path, index=False)
     print(f"Data saved to {csv_path}")
     
@@ -247,15 +247,15 @@ def plot_policy_usage_and_cycle_time(env, show_plot=True):
     
     plt.tight_layout()
     os.makedirs(os.path.dirname('figures/training'), exist_ok=True)
-    plt.savefig(f'figures/training/{env.simulator.problem_name}_action_count.png')
+    plt.savefig(f'figures/training/{env.simulator.problem_name}_mid_action_count.png')
     if show_plot:
         plt.show()
 
 def main():
     # Train the policy
-    problem_name = sys.argv[1] if len(sys.argv) > 1 else 'bpi2012'
-    action_setup = 'assignments'
-    model = train_policy(problem_name, nr_cases=1000, total_timesteps=1000, action_setup=action_setup, plot=True)
+    problem_name = sys.argv[1] if len(sys.argv) > 1 else 'bpi2017'
+    action_setup = 'heuristics'
+    model = train_policy(problem_name, nr_cases=1000, total_timesteps=10000000, action_setup=action_setup, plot=True)
     # 
 if __name__ == "__main__":
     main()
