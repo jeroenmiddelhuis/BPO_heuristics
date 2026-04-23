@@ -1,12 +1,6 @@
 from typing import Callable
 import os
 import numpy as np
-from stable_baselines3.common.callbacks import BaseCallback
-
-
-from typing import Callable
-import os
-import numpy as np
 import pandas as pd
 from stable_baselines3.common.callbacks import BaseCallback
 
@@ -76,8 +70,6 @@ class PPOEvalCallback(BaseCallback):
 
                 # Take step in the environment
                 obs, reward, done, truncated, info = self.eval_env.step(np.int32(action))
-                if truncated:
-                    done = True
                 steps += 1
                 
             # Extract cycle time metrics from the completed episode
@@ -146,7 +138,7 @@ class PPOEvalCallback(BaseCallback):
         
         # Save to CSV
         os.makedirs('data_training', exist_ok=True)
-        csv_path = f'data_training/{config_type}_mid_eval_results.csv'
+        csv_path = f'data_training/{config_type}_assignments_AUC_eval_results.csv'
         df.to_csv(csv_path, index=False)
         print(f"Evaluation results saved to {csv_path}")
 
